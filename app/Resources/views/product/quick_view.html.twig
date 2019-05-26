@@ -1,0 +1,59 @@
+
+<div class="quickview-popup">
+  <div class="row">
+
+    <div class="col-md-6 product-slider">
+
+      <div class="flickity flickity-slider-wrap mfp-hover" id="gallery-main">
+
+        {% for img in product.images %}
+        <div class="gallery-cell">
+          <a href="{{ asset('images_products/'~img.name) }}" class="lightbox-img">
+            <img src="{{ asset('images_products/'~img.name) }}" alt="" />
+          </a>
+        </div>
+        {% endfor %}
+      </div> <!-- end gallery main -->
+
+      <div class="gallery-thumbs" id="gallery-thumbs">
+        {% for img in product.images %}
+          <div class="gallery-cell">
+            <img src="{{ asset('images_products/'~img.name) }}" alt="" />
+          </div>
+
+        {% endfor %}
+      </div> <!-- end gallery thumbs -->
+
+    </div> <!-- end col img slider -->
+
+    <div class="col-md-6 product-single">
+      <div class="quickview-popup__padding-box">
+
+        <h1 class="product-single__title uppercase">{{product.name}}</h1>
+
+        <span class="product-single__price">
+          <ins>
+            <span class="amount">{{ product.priceUnit|number_format(2,',',' ') }}&euro;</span>
+          </ins>
+
+        </span>
+
+
+        <!-- add to Cart form  -->
+        {{ render(controller('AppBundle:Cart:addProductForm',{'prodId':product.id})) }}
+
+
+        <div class="product_meta">
+          <ul>
+
+            <li>
+              <span >Description: <span>{{product.description}}</span></span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div> <!-- end col product description -->
+  </div> <!-- end row -->
+</div>

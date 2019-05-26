@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<section class="section-wrap pt-60 pb-30 catalog" style="margin-bottom:15%;">
+      <div class="container">
+
+        <!-- Breadcrumbs -->
+        <ol class="breadcrumbs">
+          <li>
+            <a href="{{path('homepage')}}">Accueil</a>
+          </li>
+
+          <li class="active">
+            {{currentFamily.name}}
+          </li>
+        </ol>
+
+        <div class="row">
+          <div id="products-list" class="col-lg-9 order-lg-2 mb-40">
+
+            <!-- Filter -->
+            <div class="shop-filter">
+              <p class="woocommerce-result-count">
+                Résultats: {{products|length}} produits
+              </p>
+
+            </div>
+
+            <div class="row row-8">
+              <!-- Force dimensions of 4 products by lines  -->
+              {% if products|length <  4 %}
+                {% set nbrcols = 4 - products|length  %}
+                {% for i in 1..nbrcols %}
+                  <div class="col-md col-sm-6 "></div>
+                {% endfor %}
+              {% endif %}
+              <!-- end -->
+
+              {% for prod in products %}
+                {% set sizes = "" %}
+                {% for size in prod.sizes %}
+                   {% set sizes = sizes ~ size.subname ~ "," %}  <!-- Help for filtering product by size  -->
+                {% endfor %}
+                <div class="col-md col-sm-6 " style="text-align:center">
+                  <div class="product" data-type="product" data-sizes="{{ sizes }}" >
+                  <div class="product__img-holder" >
+                    <a href="{{ path('get_product',{'id':prod.id}) }}" class="product__link">
+                      <img src="{{ asset('images_products/'~prod.imgStarName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img">
+                      <img src="{{ asset('images_products/'~prod.imgStarBackName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img-back">
+                    </a>
+                    <div class="product__actions" style="text-align:center;">
+                      <a href="{{ path('show_single_product',{'id':prod.id}) }}" class="product__quickview" style="float:none;">
+                        <i class="ui-eye"></i>
+                        <span>Aperçu</span>
+                      </a>
+
+                    </div>
+                  </div>
+
+                  <div class="product__details">
+                    <h3 class="product__title">
+                      <a href="{{ path('get_product',{'id':prod.id}) }}">{{prod.name}}</a>
+                    </h3>
+                  </div>
+
+                  <span class="product__price">
+                    <ins>
+                      <span class="amount">{{ prod.priceUnit|number_format(2,',',' ') }}&euro;</span>
+                    </ins>
+                  </span>
+                  </div>
+                </div> <!-- end product -->
+
+              {%  if loop.index is divisible by(4) %}
+              <div class="w-100"></div> <!-- after line of 3 products  -->
+              {% endif %}
+
+              {% endfor %}
+
+
+
+            </div> <!-- end row -->
+
+
+          </div> <!-- end col -->
+
+
+          <!-- Sidebar -->
+          <aside class="col-lg-3 sidebar left-sidebar">
+
+            <!-- Categories -->
+            <div class="widget widget_categories widget--bottom-line">
+              <h4 class="widget-title">Catégories</h4>
+              <ul>
+                {% for fam in families %}
+                  <li>
+                    <a href="{{ path('products_by_fam_list',{'id':fam.id}) }}" class="redhover">{{fam.name}}</a>
+                  </li>
+                {% endfor %}
+
+              </ul>
+            </div>
+
+            {% if currentFamily.hasSize == true %}
+
+            {{ render(controller('AppBundle:Product:filterBySize')) }}
+              <a href="#" id ="prods-filter" class="btn btn-sm btn-dark"><span>Filtrer</span></a>
+
+            {% endif %}
+
+
+          </aside> <!-- end sidebar -->
+
+        </div> <!-- end row -->
+      </div> <!-- end container -->
+    </section> <!-- end catalog -->
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+
+  //Filter result by size script
+  $(document).ready(function() {
+    $(document).on('click','#prods-filter',function(event){
+      event.preventDefault();
+      let choosenSizes = [];
+      $.each($( "input[name='size-filter']:checked" ),function(){
+        choosenSizes.push($(this).attr('id'));
+      });
+
+      if(choosenSizes.length == 0){
+        $.each($(".product" ),function(){  // if no filter checked show every products
+            $(this).show();
+          });
+      }
+      else{
+        $.each($(".product" ),function(){
+          let sizes = $(this).attr('data-sizes').split(',');
+          const found = sizes.some(r=> choosenSizes.indexOf(r) >= 0);
+          if(!found){
+            $(this).hide();
+          }
+          else{
+            $(this).show();
+          }
+        })
+      }
+      $('html, body').animate({
+        scrollTop: $("#products-list").offset().top
+      }, 1000)
+      });
+      });
+
+
+</script>
+
+{% endblock %}

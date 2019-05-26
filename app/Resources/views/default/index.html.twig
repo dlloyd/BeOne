@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<!-- Hero Slider -->
+<section class="hero">
+  <div id="owl-hero" class="owl-carousel owl-theme owl-carousel--dots-inside">
+
+    <div class="hero__slide" style="background-image: url(images/beone-2.jpg)">
+      <div class="container text-center">
+        <h1 class="hero__title">Le style à votre portée</h1>
+        <a href="#" class="hero__link">bouton</a>
+      </div>
+    </div>
+
+    <div class="hero__slide" style="background-image: url(images/beone-1.jpg)">
+      <div class="container relative">
+        <div class="hero__holder">
+          <h1 class="hero__title-1">dope<br>street<br>wear</h1>
+          <a href="#" class="hero__link-1 btn btn-lg btn-dark"><span>bouton</span></a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="hero__slide" style="background-image: url(images/beone-3.jpg)">
+      <div class="container text-center">
+        <div class="hero__holder-1">
+          <h1 class="hero__title-2">new look </h1>
+          <h3 class="hero__subtitle">Qualité garantie</h3>
+          <a href="#" class="hero__link-1 btn btn-lg btn-color"><span>bouton</span></a>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- end owl -->
+</section> <!-- end hero slider -->
+
+<!-- Feature -->
+<section class="section-wrap pb-0" >
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-3 feature">
+        <i class="ui-cube feature__icon"></i>
+        <div class="feature__holder">
+          <h6 class="feature__title">Livraison gratuite</h6>
+          <span class="feature__text">Pour les réceptions à Bordeaux</span>
+        </div>
+      </div>
+      <div class="col-md-3 feature">
+        <i class="ui-plane feature__icon"></i>
+        <div class="feature__holder">
+          <h6 class="feature__title">Réception rapide</h6>
+          <span class="feature__text">24h Bordeaux,72h reste de la France,5j à l'international</span>
+        </div>
+      </div>
+      <div class="col-md-3 feature">
+        <i class="ui-pricetag feature__icon"></i>
+        <div class="feature__holder">
+          <h6 class="feature__title">un autre truc</h6>
+          <span class="feature__text">...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- All categs -->
+<section class="section-wrap pb-30">
+  <div class="container">
+
+    <div class="heading-row">
+      <div class="text-center">
+        <h2 class="heading bottom-line">
+          Toutes catégories
+        </h2>
+      </div>
+    </div>
+
+    <div class="row row-8" style="margin:0% 10% 0%; text-align:center;">
+      {% for prod in mixedProducts %}
+      <div class="col-lg-3 col-sm-6 product">
+        <div class="product__img-holder">
+          <a href="{{ path('get_product',{'id':prod.id}) }}" class="product__link" aria-label="Product">
+            <img src="{{ asset('images_products/'~prod.imgStarName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img">
+            <img src="{{ asset('images_products/'~prod.imgStarBackName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img-back">
+          </a>
+          <div class="product__actions" style="text-align:center;" >
+            <a href="{{ path('show_single_product',{'id':prod.id}) }}" class="product__quickview" style="float:none;">
+              <i class="ui-eye"></i>
+              <span>Aperçu</span>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="product__details">
+          <h3 class="product__title">
+            <a href="{{ path('get_product',{'id':prod.id}) }}">{{prod.name}}</a>
+          </h3>
+        </div>
+
+        <span class="product__price">
+          <ins>
+            <span class="amount">{{ prod.priceUnit|number_format(2,',',' ') }}&euro;</span>
+          </ins>
+        </span>
+      </div> <!-- end product -->
+      {% endfor %}
+
+    </div> <!-- end row -->
+  </div> <!-- end container -->
+</section> <!-- end best seller -->
+
+<!-- New Arrivals -->
+<section class="section-wrap no-padding" style="margin-bottom:10%">
+  <div class="container">
+
+    <div class="heading-row">
+      <div class="text-center">
+        <h2 class="heading bottom-line">
+          Nouveautés
+        </h2>
+      </div>
+    </div>
+
+    <div class="row row-8" style="margin:0% 10% 0%; text-align:center;">
+      {% for prod in newProducts %}
+      <div class="col-lg-3 col-sm-6 product">
+        <div class="product__img-holder">
+          <a href="{{ path('get_product',{'id':prod.id}) }}" class="product__link" aria-label="Product">
+            <img src="{{ asset('images_products/'~prod.imgStarName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img">
+            <img src="{{ asset('images_products/'~prod.imgStarBackName ) | imagine_filter('my_catalog_thumb') }}" alt="" class="product__img-back">
+          </a>
+          <div class="product__actions">
+            <a href="{{ path('show_single_product',{'id':prod.id}) }}" class="product__quickview" style="float:none;">
+              <i class="ui-eye"></i>
+              <span>Aperçu</span>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="product__details">
+          <h3 class="product__title">
+            <a href="{{ path('get_product',{'id':prod.id}) }}">{{prod.name}}</a>
+          </h3>
+        </div>
+
+        <span class="product__price">
+          <ins>
+            <span class="amount">{{ prod.priceUnit|number_format(2,',',' ') }}&euro;</span>
+          </ins>
+        </span>
+      </div> <!-- end product -->
+      {% endfor %}
+
+
+    </div> <!-- end row -->
+  </div> <!-- end container -->
+</section> <!-- end new arrivals -->
+{% endblock %}

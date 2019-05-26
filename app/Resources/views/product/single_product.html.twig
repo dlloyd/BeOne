@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+<section class="section-wrap pb-20 product-single">
+     <div class="container">
+
+       <!-- Breadcrumbs -->
+       <ol class="breadcrumbs">
+         <li>
+           <a href="{{ path('homepage') }}">Accueil</a>
+         </li>
+         <li>
+           <a href="{{ path('products_by_fam_list',{'id':product.family.id}) }}">{{product.family.name}}</a>
+         </li>
+         <li class="active">
+           {{ product.name }}
+         </li>
+       </ol>
+
+       <div class="row">
+
+         <div class="col-md-6 product-slider mb-50">
+
+           <div class="flickity flickity-slider-wrap mfp-hover" id="gallery-main">
+             {% for img in product.images %}
+             <div class="gallery-cell">
+               <a href="{{ asset('images_products/'~img.name) }}" class="lightbox-img">
+                 <img src="{{ asset('images_products/'~img.name)| imagine_filter('my_gallery_large') }}" alt="" />
+               </a>
+             </div>
+             {% endfor %}
+
+           </div> <!-- end gallery main -->
+
+           <div class="gallery-thumbs" id="gallery-thumbs">
+           {% for img in product.images %}
+
+             <div class="gallery-cell">
+               <img src="{{ asset('images_products/'~img.name)  }}" alt="" />
+             </div>
+
+           {% endfor %}
+           </div> <!-- end gallery thumbs -->
+
+         </div> <!-- end col img slider -->
+
+         <div class="col-md-6 product-single">
+           <h1 class="product-single__title uppercase">{{ product.name }}</h1>
+
+           <span class="product-single__price">
+             <ins>
+               <span class="amount">{{ product.priceUnit|number_format(2,',',' ') }}&euro;</span>
+             </ins>
+
+           </span>
+
+           <!-- add to Cart form  -->
+           {{ render(controller('AppBundle:Cart:addProductForm',{'prodId':product.id})) }}
+
+
+
+           <!-- Accordion -->
+           <div class="accordion mb-50" id="accordion">
+             <div class="accordion__panel">
+               <div class="accordion__heading" id="headingOne">
+                 <a data-toggle="collapse" href="#collapseOne" class="accordion__link accordion--is-open" aria-expanded="true" aria-controls="collapseOne">Description<span class="accordion__toggle">&nbsp;</span>
+                 </a>
+               </div>
+               <div id="collapseOne" class="collapse show" data-parent="#accordion" role="tabpanel" aria-labelledby="headingOne">
+                 <div class="accordion__body">
+                   {{ product.description }}
+                 </div>
+               </div>
+             </div>
+
+           </div> <!-- end accordion -->
+
+         </div> <!-- end col product description -->
+       </div> <!-- end row -->
+
+     </div> <!-- end container -->
+   </section> <!-- end single product -->
+
+
+      <!-- Related Products -->
+      <section class="section-wrap pt-0 pb-40">
+        <div class="container">
+
+          <div class="heading-row">
+            <div class="text-center">
+              <h2 class="heading bottom-line">
+                Produits Similaires
+              </h2>
+            </div>
+          </div>
+
+          <div class="row row-8">
+            {% for prod in similarProducts %}
+            <div class="col-lg-2 col-sm-4 product" style="text-align:center">
+              <div class="product__img-holder">
+                <a href="{{ path('get_product',{'id':prod.id}) }}" class="product__link">
+                  <img src="{{ asset('images_products/'~prod.imgStarName ) }}" alt="" class="product__img">
+                  <img src="{{ asset('images_products/'~prod.imgStarBackName ) }}" alt="" class="product__img-back">
+                </a>
+                <div class="product__actions" style="text-align:center;">
+                  <a href="quickview.html" class="product__quickview" style="float:none;">
+                    <i class="ui-eye"></i>
+                    <span>Aperçu</span>
+                  </a>
+
+                </div>
+              </div>
+
+              <div class="product__details">
+                <h3 class="product__title">
+                  <a href="{{ path('get_product',{'id':prod.id}) }}">{{prod.name}}</a>
+                </h3>
+              </div>
+
+              <span class="product__price">
+                <ins>
+                  <span class="amount">{{ prod.priceUnit|number_format(2,',',' ') }}&euro;</span>
+                </ins>
+              </span>
+            </div> <!-- end product -->
+            {% endfor %}
+
+
+          </div> <!-- end row -->
+        </div> <!-- end container -->
+      </section> <!-- end related products -->
+
+
+
+{% endblock %}

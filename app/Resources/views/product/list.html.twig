@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="page-title text-center">
+  <div class="container">
+    <h1 class=" heading page-title__title">Liste des produits </h1>
+  </div>
+</section> <!-- end page title -->
+
+
+<!-- Cart -->
+<section class="section-wrap cart pt-50 pb-40">
+  <div class="container relative">
+
+    <div class="table-wrap">
+      <table class="shop_table cart table">
+        <thead>
+          <tr>
+            <th class="product-thumbnail">Produit</th>
+            <th class="product-name">Nom</th>
+            <th class="product-price">Prix</th>
+            <th class="product-update">Modifier</th>
+            <th class="product-delete"> Supprimer </th>
+            <th class="product-images">Images</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td class="product-thumbnail">
+              <a href="#">
+                <img src="{{ asset('images_products/'~product.imgStarName ) | imagine_filter('my_full_cart_thumb') }}" alt="">
+              </a>
+            </td>
+            <td class="product-name">
+              <a href="#">{{product.name}}</a>
+              <ul>
+                {% if product.sizes != null %}
+                <li>Taille(s) :{% for size in product.sizes %} {{size.name}}, {% endfor %}</li>
+                {% endif %}
+              </ul>
+            </td>
+            <td class="product-price">
+              <span class="amount">{{product.priceUnit}}&euro;</span>
+            </td>
+            <td class="product-update">
+              <a href="{{ path('update_product',{'id':product.id}) }}"  title="Modifier">
+                Modifier
+              </a>
+            </td>
+            <td class="product-delete">
+              <a href="{{ path('delete_product',{'id':product.id}) }}" class="remove" title="Supprimer">
+                Supprimer
+              </a>
+            </td>
+
+            <td class="product-images">
+              <a href="{{ path('add_product_image',{'id':product.id}) }}"  title="Images">
+                Voir Images
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+  </div> <!-- end container -->
+</section> <!-- end cart -->
+
+
+{% endblock %}

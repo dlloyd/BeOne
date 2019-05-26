@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="page-title text-center">
+  <div class="container">
+    <h1 class=" heading page-title__title">Votre panier </h1>
+  </div>
+</section> <!-- end page title -->
+
+
+<!-- Cart -->
+<section class="section-wrap cart pt-50 pb-40">
+  <div class="container relative" id="cart-content">
+    {% if app.session.get('cart') is empty %}
+      <div style="text-align:center;margin-bottom:200px;font-size:xx-large;" id="empty-cart" > Votre panier est vide </div>
+
+    {% else %}
+      <div style="display:none;text-align:center;margin-bottom:200px;font-size:xx-large;" id="empty-cart" > Votre panier est vide </div>
+
+
+    <div class="table-wrap">
+      <table class="shop_table cart table" id="cart-table">
+        <thead>
+          <tr>
+            <th class="product-thumbnail">Produit</th>
+            <th class="product-name">Nom</th>
+            <th class="product-price">Prix</th>
+            <th class="product-quantity">Quantité</th>
+            <th class="product-subtotal">Sous-total</th>
+            <th class="product-delete"> Supprimer </th>
+
+          </tr>
+        </thead>
+        <tbody>
+        {% set totalAmount = 0 %}
+        {% for item in app.session.get('cart') %}
+         {% set subTotal = (item.quantity * item.priceUnit) %}
+         {% set totalAmount = totalAmount + subTotal %}
+         {% if item.size is defined %}
+          {% set sizeSubname = item.size.subname %}
+         {% else %}
+          {% set sizeSubname = '' %}
+         {% endif %}
+         <tr class="cart_item" id="{{item.id}}{{sizeSubname}}" data-item-id="{{item.id}}" data-item-size="{{sizeSubname}}" >
+           <td class="product-thumbnail">
+             <a>
+               <img src="{{item.imageUrl}}" alt="">
+             </a>
+
+           </td>
+           <td class="product-name">
+             <a href="#">{{item.name}}</a><br/>
+             {% if item.size is defined %}
+             Taille:
+             <ul>
+               <li>{{sizeSubname}}</li>
+             </ul>
+
+             {% endif %}
+
+           </td>
+           <td class="product-price">
+             <span class="amount price">{{ item.priceUnit|number_format(2,',',' ') }}</span>&euro;
+           </td>
+           <td class="product-quantity">
+             <div class="quantity buttons_added">
+               <input type="button" value="-" class="minus">
+               <input type="number" step="1" min="1" max="5" value="{{item.quantity}}" title="Qty" class="input-text qty text">
+               <input type="button" value="+" class="plus">
+             </div>
+           </td>
+           <td class="product-subtotal">
+             <span class="prod-subtotal">{{ subTotal|number_format(2,',',' ') }}</span><span>&euro;</span>
+           </td>
+           <td class="product-remove">
+             <a href="{{ path('remove_from_cart',{'id':item.id, 'size':sizeSubname}) }}" class="remove" title="supprimer">
+               <i class="ui-close"></i>
+             </a>
+           </td>
+         </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+
+    <div id="amount-widget">
+    <div class="row mb-30" id="amount-widget">
+          <div class="col-lg-5">
+
+          </div>
+
+          <div class="col-lg-7">
+            <div class="actions">
+
+              <div class="wc-proceed-to-checkout">
+                <a href="{{ path('validation_cart') }}" id="payment" class="btn btn-md btn-color btn-button"><span>Passer au paiement</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-between" >
+          <div class="col-lg-6 ">
+          </div>
+
+          <div class="col-lg-4">
+            <div class="cart_totals">
+              <h2 class="uppercase mb-20">Montant Total</h2>
+
+              <table class="table shop_table">
+                <tbody>
+                  <tr class="cart-total">
+                    <th>Sous-Total</th>
+                    <td>
+                      <span class="amount" id="cart-total">{{ totalAmount|number_format(2,',',' ') }}</span><span>&euro;</span>
+                    </td>
+                  </tr>
+                  <tr class="shipping">
+                    <th>Frais de livraison</th>
+                    <td>
+                      <span>Gratuit</span>
+                    </td>
+                  </tr>
+                  <tr class="order-total">
+                    <th>Montant Total</th>
+                    <td>
+                      <strong><span id="order-total-amount" class="amount">{{ totalAmount|number_format(2,',',' ') }}</span><span style="color:black">&euro;</span></strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div> <!-- end col cart totals -->
+          </div>
+        </div> <!-- end row -->
+      {% endif %}
+
+  </div> <!-- end container -->
+</section> <!-- end cart -->
+
+
+{% endblock %}

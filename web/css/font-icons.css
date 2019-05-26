@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'ui-icons';
+  src: url('../fonts/ui-icons.eot?27792641');
+  src: url('../fonts/ui-icons.eot?27792641#iefix') format('embedded-opentype'),
+       url('../fonts/ui-icons.woff2?27792641') format('woff2'),
+       url('../fonts/ui-icons.woff?27792641') format('woff'),
+       url('../fonts/ui-icons.ttf?27792641') format('truetype'),
+       url('../fonts/ui-icons.svg?27792641#ui-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'ui-icons';
+    src: url('../font/ui-icons.svg?27792641#ui-icons') format('svg');
+  }
+}
+*/
+
+ [class^="ui-"]:before, [class*=" ui-"]:before {
+  font-family: "ui-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.ui-user:before { content: '\e800'; } /* 'î €' */
+.ui-eye:before { content: '\e801'; } /* 'î ' */
+.ui-twitter:before { content: '\f099'; } /* 'ï‚™' */
+.ui-facebook:before { content: '\f09a'; } /* 'ï‚š' */
+.ui-github:before { content: '\f09b'; } /* 'ï‚›' */
+.ui-pinterest:before { content: '\f0d2'; } /* 'ïƒ’' */
+.ui-linkedin:before { content: '\f0e1'; } /* 'ïƒ¡' */
+.ui-bag:before { content: '\f110'; } /* 'ï„' */
+.ui-youtube:before { content: '\f167'; } /* 'ï…§' */
+.ui-xing:before { content: '\f168'; } /* 'ï…¨' */
+.ui-dropbox:before { content: '\f16b'; } /* 'ï…«' */
+.ui-stackoverflow:before { content: '\f16c'; } /* 'ï…¬' */
+.ui-instagram:before { content: '\f16d'; } /* 'ï…­' */
+.ui-flickr:before { content: '\f16e'; } /* 'ï…®' */
+.ui-bitbucket:before { content: '\f171'; } /* 'ï…±' */
+.ui-tumblr:before { content: '\f173'; } /* 'ï…³' */
+.ui-apple:before { content: '\f179'; } /* 'ï…¹' */
+.ui-windows:before { content: '\f17a'; } /* 'ï…º' */
+.ui-android:before { content: '\f17b'; } /* 'ï…»' */
+.ui-dribbble:before { content: '\f17d'; } /* 'ï…½' */
+.ui-skype:before { content: '\f17e'; } /* 'ï…¾' */
+.ui-foursquare:before { content: '\f180'; } /* 'ï†€' */
+.ui-trello:before { content: '\f181'; } /* 'ï†' */
+.ui-vkontakte:before { content: '\f189'; } /* 'ï†‰' */
+.ui-vimeo:before { content: '\f194'; } /* 'ï†”' */
+.ui-slack:before { content: '\f198'; } /* 'ï†˜' */
+.ui-google:before { content: '\f1a0'; } /* 'ï† ' */
+.ui-reddit:before { content: '\f1a1'; } /* 'ï†¡' */
+.ui-stumbleupon:before { content: '\f1a4'; } /* 'ï†¤' */
+.ui-delicious:before { content: '\f1a5'; } /* 'ï†¥' */
+.ui-digg:before { content: '\f1a6'; } /* 'ï†¦' */
+.ui-behance:before { content: '\f1b4'; } /* 'ï†´' */
+.ui-spotify:before { content: '\f1bc'; } /* 'ï†¼' */
+.ui-soundcloud:before { content: '\f1be'; } /* 'ï†¾' */
+.ui-codeopen:before { content: '\f1cb'; } /* 'ï‡‹' */
+.ui-git:before { content: '\f1d3'; } /* 'ï‡“' */
+.ui-slideshare:before { content: '\f1e7'; } /* 'ï‡§' */
+.ui-twitch:before { content: '\f1e8'; } /* 'ï‡¨' */
+.ui-visa:before { content: '\f1f0'; } /* 'ï‡°' */
+.ui-mastercard:before { content: '\f1f1'; } /* 'ï‡±' */
+.ui-discover:before { content: '\f1f2'; } /* 'ï‡²' */
+.ui-amex:before { content: '\f1f3'; } /* 'ï‡³' */
+.ui-paypal:before { content: '\f1f4'; } /* 'ï‡´' */
+.ui-stripe:before { content: '\f1f5'; } /* 'ï‡µ' */
+.ui-lastfm:before { content: '\f202'; } /* 'ïˆ‚' */
+.ui-forumbee:before { content: '\f211'; } /* 'ïˆ‘' */
+.ui-sellsy:before { content: '\f213'; } /* 'ïˆ“' */
+.ui-shirtsinbulk:before { content: '\f214'; } /* 'ïˆ”' */
+.ui-skyatlas:before { content: '\f216'; } /* 'ïˆ–' */
+.ui-whatsapp:before { content: '\f232'; } /* 'ïˆ²' */
+.ui-snapchat:before { content: '\f2ac'; } /* 'ïŠ¬' */
+.ui-close:before { content: '\f2d7'; } /* 'ï‹—' */
+.ui-star:before { content: '\f2fc'; } /* 'ï‹¼' */
+.ui-cube:before { content: '\f318'; } /* 'ïŒ˜' */
+.ui-check:before { content: '\f383'; } /* 'ïŽƒ' */
+.ui-heart:before { content: '\f387'; } /* 'ïŽ‡' */
+.ui-plane:before { content: '\f3a4'; } /* 'ïŽ¤' */
+.ui-star-half:before { content: '\f3ad'; } /* 'ïŽ­' */
+.ui-star-outline:before { content: '\f3ae'; } /* 'ïŽ®' */
+.ui-arrow-down:before { content: '\f3d0'; } /* 'ï' */
+.ui-arrow-left:before { content: '\f3d2'; } /* 'ï’' */
+.ui-arrow-right:before { content: '\f3d3'; } /* 'ï“' */
+.ui-arrow-up:before { content: '\f3d8'; } /* 'ï˜' */
+.ui-pricetag:before { content: '\f48f'; } /* 'ï’' */
+.ui-search:before { content: '\f4a4'; } /* 'ï’¤' */

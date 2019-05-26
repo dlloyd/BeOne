@@ -1,0 +1,193 @@
+<!-- Mobile Sidenav -->
+<header class="sidenav" id="sidenav">
+
+  <nav>
+    <ul class="sidenav__menu" role="menubar">
+      <li>
+        <a href="{{ path('homepage') }}" class="sidenav__menu-link redhover">Accueil</a>
+      </li>
+      {% for fam in families %}
+        <li>
+          <a href="{{ path('products_by_fam_list',{'id':fam.id}) }}" class="sidenav__menu-link redhover">{{fam.name}}</a>
+        </li>
+      {% endfor %}
+
+      {% if is_granted('ROLE_ADMIN') %}
+      <li>
+       <a href="#" class="sidenav__menu-link" >Panel Administrateur</a>
+       <button class="sidenav__menu-toggle" aria-haspopup="true" aria-label="Open dropdown"><i class="ui-arrow-down"></i></button>
+       <ul class="sidenav__menu-dropdown">
+         <li><a href="{{ path('add_product') }}" class="sidenav__menu-link" >Ajouter produit</a></li>
+         <li><a href="{{ path('products_list') }}" class="sidenav__menu-link" >Liste des produits</a></li>
+         <li><a href="{{path('fos_user_security_logout')}}" class="sidenav__menu-link" >Se déconnecter</a></li>
+
+       </ul>
+      </li>
+      {% endif %}
+
+    </ul>
+  </nav>
+</header> <!-- end mobile sidenav -->
+
+
+<main class="main oh" id="main">
+
+  <!-- Navigation -->
+  <header class="nav">
+
+    <div class="nav__holder nav--sticky">
+      <div class="container relative">
+
+        <!-- Top Bar -->
+        <div class="top-bar d-none d-lg-flex">
+          <div class="top-bar__left" style="width:20%">
+            <a href="#" class="facebook" aria-label="facebook"><i class="ui-facebook"></i></a>
+
+            <a href="#" class="instagram" aria-label="instagram"><i class="ui-instagram"></i></a>
+          </div>
+          <!-- Promo -->
+          <p class="top-bar__promo text-center">BeOne the vision </p>
+
+          <!-- Cart -->
+          <div class="top-bar__right">
+
+
+            <div class="top-bar__item nav-cart">
+              <a href="{{ path('full_cart') }}">
+                Panier <i class="ui-bag"></i> ( <span id="cart-total-items">{{ app.session.get('cart')|length }}</span>  )
+              </a>
+              {% if cPath != 'full_cart' and cPath != 'payment_page' %}   <!--  don't diplay cart dropdown on full cart page -->
+              <div class="nav-cart__dropdown">
+
+              {% if app.session.get('cart') is empty %}
+                <div id="empty-cart" class="nav-cart__summary">
+                  <span>Votre panier est vide</span>
+                </div>
+                <div class="nav-cart__items">
+                </div> <!-- end cart items -->
+
+                <div class="nav-cart__summary">
+                  <span>Montant total</span>
+                  <span class="nav-cart__total-price"> <span id="cart-total">0</span>&euro;</span>
+                </div>
+
+                <div class="nav-cart__actions mt-20" style="display:none">
+                  <a href="{{ path('full_cart') }}" class="btn btn-md btn-light"><span>Voir panier</span></a>
+                  <a href="{{ path('payment_page') }}" class="btn btn-md btn-color mt-10"><span>Passer au paiement</span></a>
+                </div>
+
+              {% else %}
+                <div class="nav-cart__items">
+                  {% set totalAmount = 0 %}
+                  {% for item in app.session.get('cart') %}
+                    {% set subTotal = (item.quantity * item.priceUnit) %}
+                    {% set totalAmount = totalAmount + subTotal %}
+
+                     {% if item.size is defined %}
+                      {% set sizeSubname = item.size.subname %}
+                     {% else %}
+                      {% set sizeSubname = '' %}
+                     {% endif %}
+                  <div class="nav-cart__item clearfix" id="{{item.id}}{{sizeSubname}}">
+                    <div class="nav-cart__img">
+                      <a href="#">
+                        <img src="{{item.imageUrl}}" alt="">
+                      </a>
+                    </div>
+                    <div class="nav-cart__title">
+                      <a href="#">
+                        {{item.name}}
+                      </a>
+                      {% if item.size is defined %}
+                        <br/> <span>Taille:{{sizeSubname}}</span>
+                      {% endif %}
+                      <div class="nav-cart__price">
+                        <span><span class="qty">{{item.quantity }}</span> x</span>
+                        <span><span class="price">{{ item.priceUnit|number_format(2,',',' ') }}</span>&euro;</span>
+                      </div>
+                    </div>
+                    <div class="nav-cart__remove">
+                      <a href="{{ path('remove_from_cart',{'id':item.id, 'size':sizeSubname}) }}"><i class="ui-close"></i></a>
+                    </div>
+                  </div>
+                  {% endfor %}
+
+                </div> <!-- end cart items -->
+
+                <div class="nav-cart__summary">
+                  <span>Montant Total</span>
+                  <span class="nav-cart__total-price"> <span id="cart-total">{{ totalAmount|number_format(2,',',' ') }}</span>&euro;</span>
+                </div>
+
+                <div class="nav-cart__actions mt-20">
+                  <a href="{{ path('full_cart') }}" class="btn btn-md btn-light"><span>Voir panier</span></a>
+                  <a href="{{ path('payment_page') }}" class="btn btn-md btn-color mt-10"><span>Passer au paiement</span></a>
+                </div>
+              {% endif %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div> <!-- end top bar -->
+
+        <div class="flex-parent">
+
+          <!-- Mobile Menu Button -->
+          <button class="nav-icon-toggle" id="nav-icon-toggle" aria-label="Open mobile menu">
+            <span class="nav-icon-toggle__box">
+              <span class="nav-icon-toggle__inner"></span>
+            </span>
+          </button> <!-- end mobile menu button -->
+
+          <!-- Logo -->
+          <a href="{{ path('homepage') }}" class="logo">
+            <img class="logo__img" src="#" alt="logo">
+          </a>
+
+          <!-- Nav-wrap -->
+          <nav class="flex-child nav__wrap d-none d-lg-block" style="margin-right:15%; text-align:center;">
+
+            <ul class="nav__menu">
+              <li>
+                <a href="{{path('homepage')}}" class="redhover">Accueil</a>
+              </li>
+              {% for fam in families %}
+                <li>
+                  <a href="{{ path('products_by_fam_list',{'id':fam.id}) }}" class="redhover">{{fam.name}}</a>
+                </li>
+              {% endfor %}
+
+              {% if is_granted('ROLE_ADMIN') %}
+              <li class="nav__dropdown">
+               <a href="#">Panel Administrateur</a>
+               <ul class="nav__dropdown-menu">
+                 <li><a href="{{ path('add_product') }}">Ajouter produit</a></li>
+                 <li><a href="{{ path('products_list') }}">Liste des produits</a></li>
+                 <li><a href="{{path('fos_user_security_logout')}}">Se déconnecter</a></li>
+
+               </ul>
+             </li>
+              {% endif %}
+
+
+            </ul> <!-- end menu -->
+
+          </nav> <!-- end nav-wrap -->
+
+
+          <!-- Mobile Cart -->
+          {% if not is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('full_cart') }}" class="nav__mobile-cart d-lg-none">
+            <i class="ui-bag"></i>
+            <span class="nav__mobile-cart-amount">( <span id="cart-total-items-mobile">{{ app.session.get('cart')|length }}</span>  )</span>
+          </a>
+          {% endif %}
+
+
+
+        </div> <!-- end flex-parent -->
+      </div> <!-- end container -->
+
+    </div>
+  </header> <!-- end navigation -->

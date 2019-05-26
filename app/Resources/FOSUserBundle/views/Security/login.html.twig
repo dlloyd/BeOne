@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% if error %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+
+{% endif %}
+<div style="margin: 10%;text-transform: none;">
+<form action="{{ path("fos_user_security_check") }}" method="post">
+    {% if csrf_token %}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+    {% endif %}
+
+    <label for="username">Identifiant</label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" autocomplete="username" />
+
+    <label for="password">Mot de Passe</label>
+    <input type="password" id="password" name="_password" required="required" autocomplete="current-password" />
+
+    <div align="center">
+        <input type="submit" id="_submit" name="_submit" value="Se Connecter" />
+    </div>
+
+</form>
+</div>
+
+
+{% endblock %}

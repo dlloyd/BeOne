@@ -1,0 +1,263 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<!-- Content
+================================================== -->
+
+<!-- Container -->
+<div class="container" style="margin-bottom:300px;margin-top:100px;">
+	<div class="row">
+
+		<!-- Content
+		================================================== -->
+		<div class="col-lg-8 col-md-8 padding-right-30" style="text-align:center;margin-top:5%;">
+			<div>
+				<h2><u>Détail Produit</u></h2>
+					Produit: &nbsp <strong>{{ product.name }}</strong><br/>
+
+					Prix Unitaire: &nbsp <strong>{{ product.priceUnit }} &euro; </strong><br/><br/>
+					<a href="{{ path('update_product',{'id':product.id }) }}" class="btn btn-lg"> Mettre à jour </a>
+
+			</div>
+
+
+
+			<!-- Dropzone -->
+			<div style="margin-top:10%">
+
+				<!-- Headline -->
+				<div class="add-listing-headline">
+					<h2><u>Ajouter une image</u></h2>
+				</div>
+
+				<!-- Dropzone -->
+				<div class="submit-section">
+					{{ form_start(form,{'attr': {'id': 'image_form'},'method': 'post', 'action': path('add_product_image',{'id':product.id}) }) }}
+
+					<ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+
+
+					</ul>
+					{{ form_widget(form.save,{'attr':{'class': 'btn btn-lg btn-color btn-button' }}) }}
+
+					{{ form_rest(form) }}
+
+					{{ form_end(form) }}
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<!-- Sidebar
+		================================================== -->
+		<div class="col-lg-4 col-md-4 margin-top-0 margin-bottom-60">
+			<h2><u>Liste des images</u></h2>
+			<div id="images_content">
+				{% for img in product.images %}
+				<div class="listing-item" style="border:1px solid black;margin-bottom:20px;">
+				<img src="{{ asset('images_products/'~img.name) }}" alt=""/>
+
+				<div class="listing-item-content">
+
+					<form action="{{ path('change_product_image_star',{'imgId':img.id}) }}">
+						{% if img.isStar != true %}
+						<input name='star' type="submit" value="Rendre vedette" style="background-color:red;color:white;"  />
+						{% else %}
+						<input name='star' type="submit" value="Rendre vedette" style="background-color:green;color:white;"  disabled/>
+						{% endif %}
+					</form>
+
+					<form action="{{ path('change_product_image_star_back',{'imgId':img.id}) }}">
+						{% if img.isStarBack != true %}
+						<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:red;color:white;"  />
+						{% else %}
+						<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:green;color:white;" disabled/>
+						{% endif %}
+					</form>
+
+					<form action="{{ path('delete_product_image',{'imgId':img.id}) }}">
+						<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;' />
+					</form>
+
+
+				</div>
+				</div>
+
+				{% endfor %}
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+<script src="http://malsup.github.com/jquery.form.js"></script>
+
+<script type="text/javascript">
+  var $collectionHolder;
+
+	// setup an "add a tag" link
+	var $addImgButton = $('<button type="button" class="add_img_link">Ajouter une image</button>');
+	var $newLinkLi = $('<li></li>').append($addImgButton);
+
+	$(document).ready(function() {
+			$("#form_save").hide();
+	    $collectionHolder = $('ul.images');
+	    $collectionHolder.append($newLinkLi);
+
+	    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+	    $addImgButton.on('click', function(e) {
+	        $("#form_save").prop('disabled', false).show();
+					$(this).hide();
+	        addImgForm($collectionHolder, $newLinkLi);
+	    });
+	});
+
+	function addImgForm($collectionHolder, $newLinkLi) {
+    // Get the data-prototype explained earlier
+    var prototype = $collectionHolder.data('prototype');
+
+    // get the new index
+    var index = $collectionHolder.data('index');
+
+    var newForm = prototype;
+
+    newForm = newForm.replace(/__name__/g, index);
+    $collectionHolder.data('index', index + 1);
+    var $newFormLi = $("<li></li>").append(newForm);
+    $newLinkLi.before($newFormLi);
+}
+</script>
+
+<script type="text/javascript"> //async form for image add
+
+	$(document).ready(function() {
+    let options = {
+        success:   showResponse,  // post-submit callback
+				clearForm: true,        // clear all form fields after successful submit
+				resetForm: true,        // reset the form after successful submit
+				dataType:  'json'        // 'xml', 'script', or 'json' (expected server response type)
+
+    };
+
+    // bind form using 'ajaxForm'
+    $('#image_form').ajaxForm(options);
+});
+
+
+// post-submit callback
+function showResponse(data)  {
+	// responseArray = [id,imgLink]
+	let star_route = Routing.generate('change_product_image_star', { imgId: data[0] });
+	let star_back_route = Routing.generate('change_product_image_star_back', { imgId: data[0] });
+	let delete_image_route = Routing.generate('delete_product_image', { imgId: data[0] });
+	let img_link = "/images_products/"+data[1];
+
+
+	let content = "<div class='listing-item' style='border:1px solid black;margin-bottom:20px;'> <img src="+ img_link +" alt=''/>"+
+								"<div class='listing-item-content'>"+
+								"<form action=\""+star_route+"\">"+
+								"<input name='star' type='submit' value='Rendre vedette' style='background-color:red;color:white;' />"+
+								"</form>"+
+								"<form action=\""+star_back_route+"\">"+
+								"<input name='star_back' type='submit' value='Rendre vedette arrière-plan'style='background-color:red;color:white;' />"+
+								"</form>"+
+								"<form action=\""+delete_image_route+"\">"+
+								"<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;' />"+
+								"</form>"+
+
+								"</div>"+
+								"</div>" ;
+
+	$('#images_content').append(content);
+	$("#form_save").hide();
+	$('#form_images_1').closest('li').remove();
+	$(".add_img_link").show();
+}
+
+</script>
+
+
+<script type="text/javascript"> //async form for image Star
+
+	$(document).ready(function() {
+    $(document).on('click','input[name="star"]',function(event){
+			event.preventDefault();
+			let form = $(this).closest("form");
+			let url = form.attr( "action" );
+			let selected = $(this);
+
+			let posting = $.post(url);
+
+		  // new display on success
+		  posting.done(function( data ) {
+				alert(data);
+				$('input[name="star"]').attr('disabled',false).css("background-color","red"); // make sure the previous star button is now activated
+		    selected.attr('disabled',true).css("background-color","green"); // disable the new star button
+	  	});
+		})
+});
+
+
+</script>
+
+<script type="text/javascript"> //async form for image Star Back
+
+	$(document).ready(function() {
+    $(document).on('click','input[name="star_back"]',function(event){
+			event.preventDefault();
+			let form = $(this).closest("form");
+			let url = form.attr( "action" );
+			let selected = $(this);
+
+			let posting = $.post(url);
+
+		  // new display on success
+		  posting.done(function( data ) {
+				alert(data);
+				$('input[name="star_back"]').attr('disabled',false).css("background-color","red"); // make sure the previous star button is now activated
+		    selected.attr('disabled',true).css("background-color","green"); // disable the new star button
+	  	});
+		})
+});
+
+
+</script>
+
+<script type="text/javascript"> //async form delete image
+
+	$(document).ready(function() {
+    $(document).on('click','input[name="delete"]',function(event){
+			event.preventDefault();
+			let form = $(this).closest("form");
+			let url = form.attr( "action" );
+			let selected = $(this);
+
+			let posting = $.post(url);
+
+		  // new display on success
+		  posting.done(function( data ) {
+				alert(data);
+				selected.closest('.listing-item').remove();
+	  	});
+		})
+});
+
+
+</script>
+
+
+
+
+
+{% endblock %}

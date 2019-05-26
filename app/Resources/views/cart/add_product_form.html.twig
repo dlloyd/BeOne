@@ -1,0 +1,30 @@
+
+{{ form_start(form, {'attr': {'id': 'cart_add'},'method': 'post', 'action': path('add_to_cart',{'prodId':prodId}) }) }}
+<div class="size-quantity clearfix">
+  <div class="size">
+    <label>Tailles</label>
+    {{ form_widget(form.size,{'attr':{'class': 'size__select' }}) }}
+  </div>
+
+  <div class="quantity">
+    <label>Quantité</label>
+    {{ form_widget(form.quantity,{'attr':{'class': 'quantity__select' }}) }}
+  </div>
+</div>
+
+<div class="row row-10 product-single__actions clearfix">
+  <div class="col">
+    <button id="add-to-cart-btn" type="submit" class="btn btn-lg btn-color product-single__add-to-cart ld-ext-right running">
+      <i class="ui-bag"></i>
+      <span>Ajouter au panier</span>
+    </button>
+
+
+  </div>
+</div>
+
+
+
+{{ form_rest(form) }}
+
+{{ form_end(form) }}

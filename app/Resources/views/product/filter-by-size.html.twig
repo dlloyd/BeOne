@@ -1,0 +1,14 @@
+<!-- Size -->
+<div class="widget widget__filter-by-size widget--bottom-line">
+  <h4 class="widget-title">Tailles</h4>
+  <ul class="size-select">
+    {% for size in sizes %}
+    <li>
+      <input type="checkbox" class="checkbox" id="{{size.subname}}" name="size-filter">
+      <label for="{{size.subname}}" class="checkbox-label">{{size.subname}}</label>
+    </li>
+
+    {% endfor %}
+
+  </ul>
+</div>

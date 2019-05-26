@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{% if not form.vars.valid %}
+<ul>
+
+    {% for child in form.children %}
+
+        {%for error in child.vars.errors%}
+            <li>{{error.message}}</li>
+        {%endfor%}
+    {%endfor%}
+</ul>
+{%endif%}
+
+
+    <section class="section-wrap pb-0">
+      <div class="container">
+
+        <!-- Breadcrumbs -->
+        <ol class="breadcrumbs">
+          <li>
+            <a href="{{ path('homepage') }}">Accueil</a>
+          </li>
+          <li>
+            <a href="#">Produits</a>
+          </li>
+          <li class="active">
+            Modifier {{ product.name }}
+          </li>
+        </ol>
+
+
+    </section>
+
+
+
+    <!-- form -->
+    <section class="section-wrap pb-40">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-8">
+            <h2 class="uppercase">Modifier  </h2>
+
+            {{ form_start(form, {'method': 'post', 'action': path('update_product',{'id':product.id}) }) }}
+
+            <!-- Form -->
+            <form id="contact-form" class="contact-form mt-30 mb-30" method="post" action="#">
+              <div class="contact-name">
+                <label for="name">Nom<abbr title="required" class="required">*</abbr></label>
+                {{ form_widget(form.name) }}
+              </div>
+              <div class="contact-name">
+                <label for="price">Prix Unitaire <abbr title="required" class="required">*</abbr></label>
+                {{ form_widget(form.priceUnit) }}
+              </div>
+              <div class="contact-subject">
+                <label for="family">Famille de produit</label>
+                {{ form_widget(form.family) }}
+              </div>
+
+              <div class="contact-subject">
+                <label for="size">Tailles</label>
+                {{ form_widget(form.sizes) }}
+              </div>
+              <div class="contact-message">
+                <label for="message">Description <abbr title="required" class="required">*</abbr></label>
+                {{ form_widget(form.description) }}
+              </div>
+
+              {{ form_widget(form.save,{'attr':{'class': 'btn btn-lg btn-color btn-button' }}) }}
+
+              {{ form_rest(form) }}
+
+    					{{ form_end(form) }}
+          </div> <!-- end col -->
+
+    </section> <!-- end form -->
+
+{% endblock %}
