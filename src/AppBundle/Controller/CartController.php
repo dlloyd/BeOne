@@ -11,8 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -142,61 +140,6 @@ class CartController extends Controller
 
 
 
-  /**
-   * @Route("/payment/", options = { "expose" = true }, name="payment_page")
-   */
-  public function paymentPageAction(Request $req){
-    $em = $this->getDoctrine()->getManager();
-
-    $session = $req->getSession();
-
-    if(!$session->has('cart')){
-        return $this->redirectToRoute('homepage');
-    }
-    else{
-      $amount = 1000;
-      $form = $this->paymentForm();
-
-      if ($req->isMethod('POST')) {
-        $form->handleRequest($req);
-
-        if ($form->isSubmitted() && $form->isValid() ) {
-          try{
-            \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-            $firstname = $form->get('firstname')->getData();
-            $lastname = $form->get('lastname')->getData();
-            $email = $form->get('email')->getData();
-            $charge = \Stripe\Charge::create(array(
-              'amount'   => $amount*100,
-              'currency' => 'eur',
-              'source' => $form->get('token')->getData(),
-              'receipt_email' => $email
-            ));
-
-          //  $invoice = $this->createInvoiceReservations($billingCode,$firstname,$lastname,$email,$amount);
-           // $this->sendMailConfirmationReservation($invoice);
-            $session->remove('cart');
-
-          /*  return $this->render('payment/invoice.html.twig',array(
-                'invoice'=>$invoice,
-                ));
-          */
-          }
-          catch(\Stripe\Error\Base $e){
-
-            $this->addFlash('warning','Paiement refusé');
-          }
-        }
-      }
-
-      return $this->render('cart/payment.html.twig',[
-        'form' => $form->createView(),
-        'stripe_public_key' => $this->getParameter('stripe_public_key'),
-        'amount' => $amount,
-      ]);
-    }
-
-  }
 
 
 
@@ -303,20 +246,6 @@ class CartController extends Controller
     array_push($cart,$data);
     return $cart;
   }
-
-
-  private function paymentForm(){
-    return $this->get('form.factory')
-      ->createNamedBuilder('payment-form')
-      ->add('firstname',TextType::class)
-      ->add('lastname',TextType::class)
-      ->add('email',EmailType::class)
-      ->add('token', HiddenType::class, [
-        'constraints' => [new Assert\NotBlank()],
-      ])
-      ->add('submit', SubmitType::class, array('label' => 'Valider'))
-      ->getForm();
- }
 
 
 

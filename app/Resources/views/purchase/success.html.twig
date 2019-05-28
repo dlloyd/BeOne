@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div style="margin:10% 10% 30% 10%;text-align:center;">
+  <p style="color:black;font-size:x-large">
+    Félicitations!! Votre paiement a été réalisé avec succès.<br/><br/>
+    Code de votre commande: <u>{{purchase.code}}</u> <br/><br/>
+    Vous recevrez le détail de votre facture sur votre adresse mail.<br/><br/><br/>
+    <a href="{{ path('homepage') }}"> Retour page accueil </a>
+  </p>
+</div>
+{% endblock %}

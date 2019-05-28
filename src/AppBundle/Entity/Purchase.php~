@@ -95,15 +95,6 @@ class Purchase
      */
     private $customerPostalCode;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-      $this->date = new \DateTime();
-      $this->code = uniqid('beone',false);
-    }
-
 
 
     /**
@@ -114,7 +105,8 @@ class Purchase
     public function getId()
     {
         return $this->id;
-
+        $this->date = new \DateTime();
+        $this->code = uniqid('beone',true);
     }
 
 
@@ -380,29 +372,5 @@ class Purchase
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * Set customerEmail
-     *
-     * @param string $customerEmail
-     *
-     * @return Purchase
-     */
-    public function setCustomerEmail($customerEmail)
-    {
-        $this->customerEmail = $customerEmail;
-
-        return $this;
-    }
-
-    /**
-     * Get customerEmail
-     *
-     * @return string
-     */
-    public function getCustomerEmail()
-    {
-        return $this->customerEmail;
     }
 }

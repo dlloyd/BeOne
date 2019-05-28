@@ -54,58 +54,37 @@
 
 
                 <p class="form-row form-row-wide address-field update_totals_on_change validate-required ecommerce-validated" id="billing_country_field">
-                  <label for="billing_country">Pays
+                  <label>Pays
                     <abbr class="required" title="required">*</abbr>
                   </label>
-                  <select name="billing_country" id="billing_country" class="country_to_state country_select" title="Country *">
-                    <option>Sélectionnez un pays</option>
-
-                    <option value="FR">France</option>
-                    <option value="GA">Gabon</option>
-
-                  </select>
+                  {{ form_widget(form.country,{'attr':{'class': 'country_to_state country_select' }}) }}
                 </p>
 
 
                 <p class="form-row form-row-wide address-field validate-required ecommerce-invalid ecommerce-invalid-required-field" id="billing_address_1_field">
-                  <label for="billing_address_1">Adresse de livraison
+                  <label>Adresse de livraison
                     <abbr class="required" title="required">*</abbr>
                   </label>
-                  <input type="text" class="input-text" placeholder="Adresse rue" value name="billing_address_1" id="billing_address_1">
+                  {{ form_widget(form.address1,{'attr':{'class': 'input-text','placeholder':'Adresse rue' }}) }}
                 </p>
 
                 <p class="form-row form-row-wide address-field" id="billing_address_2_field">
-                  <input type="text" class="input-text" placeholder="Appartement,étage... (optional)" value name="billing_address_2" id="billing_address_2">
+                  {{ form_widget(form.address2,{'attr':{'class': 'input-text','placeholder':'Appartement,étage...(optionel)' }}) }}
                 </p>
 
                 <p class="form-row form-row-wide address-field validate-required" id="billing_city_field" data-o_class="form-row form-row-wide address-field validate-required">
-                  <label for="billing_city">Ville
+                  <label>Ville
                     <abbr class="required" title="required">*</abbr>
                   </label>
-                  <input type="text" class="input-text" placeholder="Ville" value name="billing_city" id="billing_city">
+                  {{ form_widget(form.city,{'attr':{'class': 'input-text' }}) }}
                 </p>
 
-
-
-                <p class="form-row form-row-last address-field validate-required validate-postcode ecommerce-invalid ecommerce-invalid-required-field" id="billing_postcode_field" data-o_class="form-row form-row-last address-field validate-required validate-postcode">
-                  <label for="billing_postcode">Code Postal
-                    <abbr class="required" title="required">*</abbr>
-                  </label>
-                  <input type="text" class="input-text" placeholder value name="billing_postcode" id="billing_postcode">
-                </p>
 
                 <div class="row">
-                  <div class="col-md-6">
-                    <p class="form-row form-row-last validate-required validate-phone" id="billing_phone_field">
-                      <label for="billing_phone">Téléphone
-                        <abbr class="required" title="required">*</abbr>
-                      </label>
-                      <input type="text" class="input-text" placeholder value name="billing_phone" id="billing_phone">
-                    </p>
-                  </div>
+
                   <div class="col-md-6">
                     <p class="form-row form-row-first validate-required validate-email" id="billing_email_field">
-                      <label for="billing_email">Email
+                      <label>Email
                         <abbr class="required" title="required">*</abbr>
                       </label>
                       {{ form_widget(form.email,{'attr':{'class': 'input-text' }}) }}
@@ -125,10 +104,10 @@
                 <h2 class="uppercase">Commande</h2>
                 <table class="table shop_table ecommerce-checkout-review-order-table">
                   <tbody>
-                  {% set totalAmount = 0 %}
+
                   {% for item in app.session.get('cart') %}
                    {% set subTotal = (item.quantity * item.priceUnit) %}
-                   {% set totalAmount = totalAmount + subTotal %}
+                   
                    {% if item.size is defined %}
                     {% set sizeSubname = item.size.subname %}
                    {% else %}
@@ -145,7 +124,7 @@
                     <tr class="cart-subtotal">
                       <th>Panier sous-total</th>
                       <td>
-                        <span class="amount">{{ totalAmount | number_format(2,',',' ') }}&euro;</span>
+                        <span class="amount">{{ amount | number_format(2,',',' ') }}&euro;</span>
                       </td>
                     </tr>
                     <tr class="shipping">
@@ -157,7 +136,7 @@
                     <tr class="order-total">
                       <th><strong>Montant Total</strong></th>
                       <td>
-                        <strong><span class="amount">{{ totalAmount | number_format(2,',',' ') }}&euro;</span></strong>
+                        <strong><span class="amount">{{ amount | number_format(2,',',' ') }}&euro;</span></strong>
                       </td>
                     </tr>
                   </tbody>
@@ -165,7 +144,7 @@
 
                 <div id="payment-order" class="ecommerce-checkout-payment">
                   <h2 class="uppercase">Mode de paiement</h2>
-                  <div style="margin-bottom:10px;" class="payment-tab-trigger">
+                  <div style="margin-bottom:30px;" class="payment-tab-trigger">
         						<img class="payment-logo" height="30px" src="https://i.imgur.com/IHEKLgm.png" alt="">
         					</div>
 

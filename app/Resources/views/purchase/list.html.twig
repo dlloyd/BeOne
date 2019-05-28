@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="page-title text-center">
+  <div class="container">
+    <h1 class=" heading page-title__title">Liste des Commandes </h1>
+  </div>
+</section> <!-- end page title -->
+
+
+<!-- Purchases -->
+<section class="section-wrap pt-50 pb-40">
+  <div class="container relative" style="margin-bottom:300px;">
+
+
+    <div class="table-wrap">
+      <table class="shop_table table">
+        <thead>
+          <tr>
+            <th class="purchase-code">Commande</th>
+            <th class="customer-lastname">Nom</th>
+            <th class="customer-firstname">Prénom</th>
+            <th class="customer-country">Pays</th>
+            <th class="customer-postalcode">Code Postal</th>
+            <th class="customer-address">Addresse</th>
+            <th class="purchase-details">Détails commande</th>
+            <th class="validate-delivery"> Livrer </th>
+
+          </tr>
+        </thead>
+        <tbody>
+        {% for purchase in purchases %}
+         <tr class="purchase" >
+           <td class="purchase-code">
+             {{ purchase.code }}
+
+           </td>
+           <td class="customer-lastname">
+              {{ purchase.customerLastname }}
+           </td>
+           <td class="customer-firstname">
+              {{ purchase.customerFirstname }}
+           </td>
+           <td class="customer-country">
+              {{ purchase.customerCountry}} - {{ purchase.customerCity}}
+           </td>
+           <td class="customer-address">
+             {{ purchase.customerAddress1 }} &nbsp; {{ purchase.customerAddress2 }}
+           </td>
+           <td class="customer-postalcode">
+             {{ purchase.customerPostalCode }}
+           </td>
+           <td class="purchase-details">
+            <button type="button" style="background-color:#008000" class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{purchase.code}}"> Détails </button>
+            <!-- Modal -->
+              <div class="modal fade" id="{{purchase.code}}" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Détail de commande </h4>
+                    </div>
+                    <div class="modal-body">
+
+                      <table>
+                      <thead>
+                        <th class="product-thumbnail">Produit</th>
+                        <th class="product-name">Nom</th>
+                        <th class="product-size">Taille</th>
+                        <th class="product-quantity">Quantité</th>
+                      </thead>
+                      <tbody>
+                        {% for item in purchase.products %}
+                          <tr>
+                          <td class="product-thumbnail">
+                            <a>
+                              <img src="{{item.imageUrl}}" alt="">
+                            </a>
+
+                          </td>
+                          <td class="product-name">
+                            <a>{{item.name}}</a>
+                          </td>
+                          <td class="product-size">
+                            {% if item.size is defined %}{{item.size.subname}} {% endif %}
+                          </td>
+                          <td class="product-quantity">
+                            {{ item.quantity }}
+                          </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+           </td>
+
+           <td class="validate-delivery">
+            {% if purchase.isDelivered == false %}
+               <a href="{{ path('admin_validate_purchase_delivery',{'id':purchase.id}) }}"  title=" valider livraison">
+                 Valider
+               </a>
+           {% endif %}
+           </td>
+         </tr>
+       {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+  </div> <!-- end container -->
+</section> <!-- end Purchases -->
+
+
+{% endblock %}
