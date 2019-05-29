@@ -127,6 +127,7 @@ class PurchaseController extends Controller
       if($purchase){
         $purchase->setIsDelivered(true);
         $purchase->setDeliveryDate(new \DateTime());
+        $purchase->setDeliveryCode($deliveryCode);
         $em->merge($purchase);
         $em->flush();
         return new Response('Commande mise au statut délivré',200);

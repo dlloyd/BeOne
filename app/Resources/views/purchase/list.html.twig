@@ -112,7 +112,7 @@
           {% if purchase.isDelivered == false %}
           <td class="validate-delivery">
             <form action="{{ path('admin_validate_purchase_delivery') }}" method="post">
-               <input type="text" value='' class="delivery-code" placeholder="Code livraison" required/>
+               <input type="text" name="delivery-code" value='' class="delivery-code" placeholder="Code livraison" required/>
                <input type="hidden" value="{{purchase.code}}" name="code" />
                <button type="button"  class="delivery">
                  Valider
@@ -152,7 +152,7 @@
         let form = $(this).parent();
 
         if(!isValidForm(form)){
-          alert('Attention! Entrez un code de livraison!');
+          bootbox.alert('Attention! Entrez un code de livraison!');
         }
         else{
           let message = "Confirmez l'envoie de la commande ";
