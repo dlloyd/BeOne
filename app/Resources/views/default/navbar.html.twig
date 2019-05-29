@@ -48,10 +48,10 @@
           <!-- Promo -->
           <p class="top-bar__promo text-center">BeOne the vision </p>
 
+
           <!-- Cart -->
           <div class="top-bar__right">
-
-
+            {% if not is_granted('ROLE_ADMIN') %}
             <div class="top-bar__item nav-cart">
               <a href="{{ path('full_cart') }}">
                 Panier <i class="ui-bag"></i> ( <span id="cart-total-items">{{ app.session.get('cart')|length }}</span>  )
@@ -127,6 +127,7 @@
               </div>
               {% endif %}
             </div>
+            {% endif %}
           </div>
 
         </div> <!-- end top bar -->
@@ -164,7 +165,8 @@
                <ul class="nav__dropdown-menu">
                  <li><a href="{{ path('add_product') }}">Ajouter produit</a></li>
                  <li><a href="{{ path('products_list') }}">Liste des produits</a></li>
-                 <li><a href="{{ path('admin_get_purchases_not_delivered') }}">Liste des commandes</a></li>
+                 <li><a href="{{ path('admin_get_purchases_not_delivered') }}">Liste des commandes en cours</a></li>
+                 <li><a href="{{ path('admin_get_purchases_delivered') }}">Liste des commandes livrées</a></li>
                  <li><a href="{{path('fos_user_security_logout')}}">Se déconnecter</a></li>
 
                </ul>

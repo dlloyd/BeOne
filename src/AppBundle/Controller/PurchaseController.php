@@ -97,25 +97,44 @@ class PurchaseController extends Controller
       }
     }
 
+
+    /**
+     * @Route("/admin/purchases/delivered", name="admin_get_purchases_delivered")
+     */
+    public function getAllDeliveredPurchasesAction(){
+      $em = $this->getDoctrine()->getManager();
+      $purchases = $em->getRepository('AppBundle:Purchase')->findAllDelivered();
+      return $this->render('purchase/list.html.twig',['purchases'=>$purchases,'status'=>'livrées']);
+    }
+
     /**
      * @Route("/admin/purchases/not_delivered", name="admin_get_purchases_not_delivered")
      */
     public function getNotDeliveredPurchasesAction(){
       $em = $this->getDoctrine()->getManager();
-      $purchases = $em->getRepository('AppBundle:Purchase')->findAll();
-      return $this->render('purchase/list.html.twig',['purchases'=>$purchases]);
+      $purchases = $em->getRepository('AppBundle:Purchase')->findNotDelivered();
+      return $this->render('purchase/list.html.twig',['purchases'=>$purchases,'status'=>'en cours']);
     }
 
     /**
-     * @Route("/admin/purchase/{id}",requirements={"id" = "\d+"}, name="admin_validate_purchase_delivery")
+     * @Route("/admin/purchase/validate", name="admin_validate_purchase_delivery")
      */
-    public function validatePurchaseDelivery($id){
+    public function validatePurchaseDelivery(Request $req){
+      $code = $req->request->get('code');
+      $deliveryCode = $req->request->get('delivery-code');
       $em = $this->getDoctrine()->getManager();
-      $purchase = $em->getRepository('AppBundle:Purchase')->find($id);
-      $purchase->setIsDelivered(true);
-      $em->merge($purchase);
-      $em->flush();
-      return new Response('Commande mise au statut délivré',200);
+      $purchase = $em->getRepository('AppBundle:Purchase')->findOneBy(['code'=>$code]);
+      if($purchase){
+        $purchase->setIsDelivered(true);
+        $purchase->setDeliveryDate(new \DateTime());
+        $em->merge($purchase);
+        $em->flush();
+        return new Response('Commande mise au statut délivré',200);
+      }
+      else{
+        return new Response('Commande non trouvée',400);
+      }
+
     }
 
 

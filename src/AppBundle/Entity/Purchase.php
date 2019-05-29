@@ -29,10 +29,24 @@ class Purchase
     private $date;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_de_livraison", type="datetime",nullable=true)
+     */
+    private $delivery_date;
+
+    /**
      * @var string
      * @ORM\Column(name="code", type="string")
      */
     private $code;
+
+    /**
+     * @var string
+     * @ORM\Column(name="delivery_code", type="string",nullable=true)
+     */
+    private $deliveryCode;
+
 
     /**
      * @var bool
@@ -73,7 +87,7 @@ class Purchase
 
     /**
      * @var string
-     * @ORM\Column(name="customer_address2", type="string")
+     * @ORM\Column(name="customer_address2", type="string",nullable=true)
      */
     private $customerAddress2;
 
@@ -404,5 +418,53 @@ class Purchase
     public function getCustomerEmail()
     {
         return $this->customerEmail;
+    }
+
+    /**
+     * Set deliveryDate
+     *
+     * @param \DateTime $deliveryDate
+     *
+     * @return Purchase
+     */
+    public function setDeliveryDate($deliveryDate)
+    {
+        $this->delivery_date = $deliveryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryDate
+     *
+     * @return \DateTime
+     */
+    public function getDeliveryDate()
+    {
+        return $this->delivery_date;
+    }
+
+    /**
+     * Set deliveryCode
+     *
+     * @param string $deliveryCode
+     *
+     * @return Purchase
+     */
+    public function setDeliveryCode($deliveryCode)
+    {
+        $this->deliveryCode = $deliveryCode;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryCode
+     *
+     * @return string
+     */
+    public function getDeliveryCode()
+    {
+        return $this->deliveryCode;
     }
 }

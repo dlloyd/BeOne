@@ -4,7 +4,7 @@
 
 <section class="page-title text-center">
   <div class="container">
-    <h1 class=" heading page-title__title">Liste des Commandes </h1>
+    <h1 class=" heading page-title__title">Liste des Commandes {{status}} </h1>
   </div>
 </section> <!-- end page title -->
 
@@ -12,10 +12,14 @@
 <!-- Purchases -->
 <section class="section-wrap pt-50 pb-40">
   <div class="container relative" style="margin-bottom:300px;">
-
+    <div class="row">
+      <div class="col-md-4">
+       <input id="search-by-code" type="text" name="search" placeholder="Recherche" />
+      </div>
+    </div>
 
     <div class="table-wrap">
-      <table class="shop_table table">
+      <table class="table">
         <thead>
           <tr>
             <th class="purchase-code">Commande</th>
@@ -29,10 +33,10 @@
 
           </tr>
         </thead>
-        <tbody>
+        <tbody id="purchase_table">
         {% for purchase in purchases %}
          <tr class="purchase" >
-           <td class="purchase-code">
+           <td class="purchase-code" id="{{ purchase.code }}">
              {{ purchase.code }}
 
            </td>
@@ -52,9 +56,9 @@
              {{ purchase.customerPostalCode }}
            </td>
            <td class="purchase-details">
-            <button type="button" style="background-color:#008000" class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{purchase.code}}"> Détails </button>
+            <button type="button" style="background-color:#008000" class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{purchase.code}}details"> Détails </button>
             <!-- Modal -->
-              <div class="modal fade" id="{{purchase.code}}" role="dialog">
+              <div class="modal fade" id="{{purchase.code}}details" role="dialog">
                 <div class="modal-dialog">
 
                   <!-- Modal content-->
@@ -105,13 +109,22 @@
               </div>
            </td>
 
-           <td class="validate-delivery">
-            {% if purchase.isDelivered == false %}
-               <a href="{{ path('admin_validate_purchase_delivery',{'id':purchase.id}) }}"  title=" valider livraison">
+          {% if purchase.isDelivered == false %}
+          <td class="validate-delivery">
+            <form action="{{ path('admin_validate_purchase_delivery') }}" method="post">
+               <input type="text" value='' class="delivery-code" placeholder="Code livraison" required/>
+               <input type="hidden" value="{{purchase.code}}" name="code" />
+               <button type="button"  class="delivery">
                  Valider
-               </a>
-           {% endif %}
+               </button>
+             </form>
+          </td>
+         {% else %}
+           <td class="validate-delivery">
+           <span> Livrée le : {{purchase.deliveryDate | date('d/m/Y')}} </span>
            </td>
+         {% endif %}
+
          </tr>
        {% endfor %}
         </tbody>
@@ -123,4 +136,75 @@
 </section> <!-- end Purchases -->
 
 
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/popper.min.js') }}"></script>
+
+  <script src="{{ asset('js/bootbox.min.js') }}"></script>
+  <script src="{{ asset('js/bootbox.locales.min.js') }}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $(document).on('click','.delivery',function(event){
+        event.preventDefault();
+
+        let form = $(this).parent();
+
+        if(!isValidForm(form)){
+          alert('Attention! Entrez un code de livraison!');
+        }
+        else{
+          let message = "Confirmez l'envoie de la commande ";
+          let formParent = form.parent();
+
+          bootbox.confirm({
+              title: "Validation commande",
+              message: message ,
+              buttons: {
+                  cancel: {
+                      label: '<i class="fa fa-times"></i> Annuler'
+                  },
+                  confirm: {
+                      label: '<i class="fa fa-check"></i> Confirmer'
+                  }
+              },
+              callback: function (response){
+                  if(response){
+                    let url = form.attr('action');
+                    let posting = $.post(url,form.serialize());
+                    posting.done(function(){
+                      form.remove()
+                      formParent.text('Livrée');
+                    })
+
+                  }
+              }
+          });
+
+        }
+
+
+      });
+
+      function isValidForm(form){
+        let result = true;
+        form.find("input").each(function(){
+          if($(this).val()==''){
+            console.log($(this).val());
+            result=false;
+          }
+        });
+        return result;
+      }
+
+      // SEARCH BILLING BY CODE
+      $("#search-by-code").on("keyup", function(){
+        var value = $(this).val().toLowerCase();
+        $("#purchase_table tr ").each(function(){
+         $(this).toggle($(this).find('.purchase-code').text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
 {% endblock %}

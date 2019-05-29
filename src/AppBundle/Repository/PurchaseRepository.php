@@ -10,4 +10,18 @@ namespace AppBundle\Repository;
  */
 class PurchaseRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function findNotDelivered(){
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.isDelivered = false');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findAllDelivered(){
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.isDelivered = true');
+        return $qb->getQuery()->getResult();
+    }
+
+
 }
