@@ -40,7 +40,7 @@
          {% if item.size is defined %}
           {% set sizeSubname = item.size.subname %}
          {% else %}
-          {% set sizeSubname = '' %}
+          {% set sizeSubname = 'none' %}
          {% endif %}
          <tr class="cart_item" id="{{item.id}}{{sizeSubname}}" data-item-id="{{item.id}}" data-item-size="{{sizeSubname}}" >
            <td class="product-thumbnail">

@@ -60,14 +60,14 @@ class CartController extends Controller
         $session = $req->getSession();
         $data = $form->getData();
         $data['imageUrl'] = $this->getProductImageThumbUrl($prod); // create image thumb if not exists and return url_link
-
+        $size = array_key_exists('size', $data)? $data['size']->getSubname() : '';
 
         $cart = $this->addProductInCart($session,$data);
         $session->set('cart',$cart);
 
         $item = ['id' =>$data['id'],'name'=> $data['name'],'quantity'=> $data['quantity'] ,
                   'priceUnit'=>$prod->getPriceUnit(),'imgUrl'=> $data['imageUrl'],
-                  'size'=>$data['size']->getSubname(),];
+                  'size'=>$size,];
 
         return new Response(json_encode($item), 200, array('Content-Type' => 'application/json'));
       }
@@ -99,7 +99,8 @@ class CartController extends Controller
         if($session->has('cart')){
             $newCart = array();
             foreach ($session->get('cart') as $item) {
-                if($item['id'] != $id && $item['size']->getSubname()!= $size){
+                if($item['id'] != $id ){
+                  if($size=='none' || $item['size']->getSubname()!= $size)
                     array_push($newCart,$item);
                 }
             }
@@ -128,9 +129,13 @@ class CartController extends Controller
     $sessionCart = $session->get('cart');
     foreach ($updatedCart as $updatedItem) {
       foreach ($sessionCart as $item) {
-        if($updatedItem['id']==$item['id'] && $updatedItem['size']==$item['size']->getSubname()){
-          $item['quantity'] = $updatedItem['quantity'];
-          array_push($newCart,$item);
+        $sizeExist = array_key_exists('size',$item);
+        if($updatedItem['id']==$item['id'] ){
+          if(!$sizeExist ||$updatedItem['size']==$item['size']->getSubname() ){
+            $item['quantity'] = $updatedItem['quantity'];
+            array_push($newCart,$item);
+          }
+
         }
       }
     }
@@ -148,7 +153,7 @@ class CartController extends Controller
 
 
   private function getProductCorrespondingForm($prod){
-    if($prod->getSizes()!=null){
+    if($prod->getFamily()->getHasSize()){
       return $this->sizableProductForm($prod);
     }
     else{
@@ -228,15 +233,19 @@ class CartController extends Controller
   }
 
   private function addProductInCart($session,$data){
+    $sizeExist = array_key_exists('size',$data);
     if($session->has('cart')){
         $cart = $session->get('cart');
         $newCart = array();
+
         foreach ($cart as $item) {
-            // if prod exists with the same size dont copy it in new cart
-            if($item['id'] != $data['id'] || ($data['size']!=null && $item['size']->getId()!=$data['size']->getId())){
+            $itemHasSize = array_key_exists('size',$item);
+            if($item['id'] != $data['id']){
+              if(!$sizeExist||($itemHasSize && $item['size']->getId()!=$data['size']->getId()))
                 array_push($newCart,$item);
             }
         }
+
         $cart = $newCart;
     }
     else{

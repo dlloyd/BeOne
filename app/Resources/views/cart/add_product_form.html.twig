@@ -1,11 +1,12 @@
 
 {{ form_start(form, {'attr': {'id': 'cart_add'},'method': 'post', 'action': path('add_to_cart',{'prodId':prodId}) }) }}
 <div class="size-quantity clearfix">
-  <div class="size">
-    <label>Tailles</label>
-    {{ form_widget(form.size,{'attr':{'class': 'size__select' }}) }}
-  </div>
-
+  {% if form.size is defined  %}
+    <div class="size">
+      <label>Tailles</label>
+      {{ form_widget(form.size,{'attr':{'class': 'size__select' }}) }}
+    </div>
+  {% endif %}
   <div class="quantity">
     <label>Quantité</label>
     {{ form_widget(form.quantity,{'attr':{'class': 'quantity__select' }}) }}
