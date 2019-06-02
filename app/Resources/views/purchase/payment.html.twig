@@ -33,20 +33,20 @@
 
                 <div class="row">
                   <div class="col-md-6">
+                    <p class="form-row form-row-last validate-required ecommerce-invalid ecommerce-invalid-required-field" id="billing_last_name_field">
+                      <label for="billing_last_name">Nom
+                        <abbr class="required" title="required">*</abbr>
+                      </label>
+                      {{ form_widget(form.lastname,{'attr':{'class': 'input-text' }}) }}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
                     <p class="form-row form-row-first validate-required ecommerce-invalid ecommerce-invalid-required-field" id="billing_first_name_field">
 
                       <label>Prénom
                         <abbr class="required" title="required">*</abbr>
                       </label>
                       {{ form_widget(form.firstname,{'attr':{'class': 'input-text' }}) }}
-                    </p>
-                  </div>
-                  <div class="col-md-6">
-                    <p class="form-row form-row-last validate-required ecommerce-invalid ecommerce-invalid-required-field" id="billing_last_name_field">
-                      <label for="billing_last_name">Nom
-                        <abbr class="required" title="required">*</abbr>
-                      </label>
-                      {{ form_widget(form.lastname,{'attr':{'class': 'input-text' }}) }}
                     </p>
                   </div>
                 </div> <!-- end name / last name -->
@@ -107,14 +107,14 @@
 
                   {% for item in app.session.get('cart') %}
                    {% set subTotal = (item.quantity * item.priceUnit) %}
-                   
-                   {% if item.size is defined %}
-                    {% set sizeSubname = item.size.subname %}
+
+                   {% if item.size !='none' %}
+                    {% set size = item.size %}
                    {% else %}
-                    {% set sizeSubname = '' %}
+                    {% set size = '' %}
                    {% endif %}
                     <tr>
-                      <th>{{item.name}} {{sizeSubname}} <span class="count"> x {{item.quantity}}</span></th>
+                      <th>{{item.name}} {{size}} <span class="count"> x {{item.quantity}}</span></th>
                       <td>
                         <span class="amount">{{ subTotal | number_format(2,',',' ') }}&euro;</span>
                       </td>

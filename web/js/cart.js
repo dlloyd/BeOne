@@ -10,59 +10,16 @@ $(document).ready(function() {
     let selected = $(this);
 
     let posting = $.post(url,form.serialize());
-    let loader = "<div class='ld ld-ring ld-spin'></div>";
-    $('#add-to-cart-btn').append(loader);
+    addSpinLoaderToDiv('#add-to-cart-btn');
 
     // new display on success
     posting.done(function( data ) {
-      let itemId = data['id'] ;
-      let item = data['name'];
-      let quantity = data['quantity'] ;
-      let priceUnit = data['priceUnit'] ;
-      let imageUrl = data['imgUrl'];
-      let size = data['size'];
-      let textSize = "";
-      let itemTotalPrice = parseFloat(priceUnit*quantity);
-      let divId = '#'+itemId+size;  // The id is composed with item_id and size_subname cause you can add many same items of different sizes
-      if($(divId).length){  //Verify if item is in the cart
-          deleteFromCartView(divId);
-      }
-
-      if(size!=''){
-        textSize = "<br/> <span>Taille:"+size+"</span>";
-      }
-
-      let delete_from_cart_route = Routing.generate('remove_from_cart', { id: itemId, size:size });
-
-      let itemContent = "<div class='nav-cart__item clearfix' id="+ itemId+size +" >"+
-                        "<div class='nav-cart__img'>"+
-                        "<a href='#'> <img src="+ imageUrl +" alt=''> </a></div>"+
-                        "<div class='nav-cart__title'>"+
-                        "<a href='#'>"+ item + "</a>"+ textSize +
-                        "<div class='nav-cart__price'>"+
-                        "<span><span class='qty'>"+ quantity+"</span> x</span>"+
-                        "<span><span class='price'>"+ priceUnit.toString().replace(/[.]/, ",") +"</span>&euro;</span>"+
-                        "</div></div>"+
-                        "<div class='nav-cart__remove'>"+
-                        "<a href="+delete_from_cart_route +"><i class='ui-close'></i></a>"+
-                        "</div></div>";
-
-      $('.nav-cart__items').append(itemContent);  // Add item on navcart dropdown
-
-      let totalAmount = parseFloat($('#cart-total').text().replace(',', '.')) + parseFloat(itemTotalPrice);
-      $('#cart-total').text(totalAmount.toFixed(2).toString().replace(/[.]/, ",")); //change with the new total
-
-      let totalItems = parseInt($('#cart-total-items').text())+1;
-      $('#cart-total-items').text(totalItems);
-      $('#cart-total-items-mobile').text(totalItems);
-      $('#empty-cart').hide();
-      $('.nav-cart__actions').show();  // show actions 'voir panier' et 'paiement'
-
-      $('.nav-cart__dropdown' ).css( {"visibility": "visible",'opacity':1});
-      $('#add-to-cart-btn').html("<i class='ui-check'></i><span>Ajouté</span>").prop('disabled',true);
-      $('#add-to-cart-btn').css('background-color','green');
-      $('#add-to-cart-btn').removeClass('btn-color');
-      setTimeout(function(){$('.nav-cart__dropdown' ).prop('style',null)},5000);
+      let itemTotalPrice = parseFloat(data['priceUnit']*data['quantity']);
+      let divId = '#'+ data['id']+data['size'];  // The id is composed with item_id and size_subname cause you can add many same items of different sizes
+      deleteItemFromCartIfItemExist(divId);
+      addItemOnNavCartDropDown(data);  // Add item on navcart dropdown
+      updateNewTotalCart(itemTotalPrice);
+      showAddingToCartValidation();
 
     });
   });
@@ -130,8 +87,8 @@ $(document).ready(function() {
   //Validate cart details and go to payment page
   $(document).on('click','#payment',function(event){
     event.preventDefault();
-    let loader = "<div class='ld ld-ring ld-spin'></div>";
-    $('#payment').append(loader);
+    addSpinLoaderToDiv('#payment');
+
     let cartContent = [];
     $('.cart_item').each(function(index){
       let item = {};
@@ -147,7 +104,7 @@ $(document).ready(function() {
 
     posting.done(function(data){
       let paymentPage = Routing.generate('payment_page');
-      window.location.href = paymentPage;
+      window.location.href = paymentPage;  // Redirect to payment page
     });
   });
 
@@ -191,6 +148,63 @@ $(document).ready(function() {
   }
 
 
+
+  function addItemOnNavCartDropDown(item){
+    let textSize='';
+    let delete_from_cart_route = Routing.generate('remove_from_cart', { id: item['id'], size:item['size'] });
+    if(item['size']!='none'){
+      textSize = "<br/> <span>Taille:"+item['size']+"</span>";
+    }
+    let itemContent = "<div class='nav-cart__item clearfix' id="+item['id']+item['size'] +" >"+
+                      "<div class='nav-cart__img'>"+
+                      "<a href='#'> <img src="+ item['imgUrl']+" alt=''> </a></div>"+
+                      "<div class='nav-cart__title'>"+
+                      "<a href='#'>"+ item['name']+ "</a>"+ textSize +
+                      "<div class='nav-cart__price'>"+
+                      "<span><span class='qty'>"+ item['quantity']+"</span> x</span>"+
+                      "<span><span class='price'>"+item['priceUnit'].toString().replace(/[.]/, ",") +"</span>&euro;</span>"+
+                      "</div></div>"+
+                      "<div class='nav-cart__remove'>"+
+                      "<a href="+delete_from_cart_route +"><i class='ui-close'></i></a>"+
+                      "</div></div>";
+
+    $('.nav-cart__items').append(itemContent);
+
+  }
+
+
+  function deleteItemFromCartIfItemExist(divId){
+    if($(divId).length){  //Verify if item is in the cart
+        deleteFromCartView(divId);
+    }
+  }
+
+  function updateNewTotalCart(itemTotalPrice){
+    let totalAmount = parseFloat($('#cart-total').text().replace(',', '.')) + parseFloat(itemTotalPrice);
+    $('#cart-total').text(totalAmount.toFixed(2).toString().replace(/[.]/, ",")); //change with the new total
+
+    let totalItems = parseInt($('#cart-total-items').text())+1;
+    $('#cart-total-items').text(totalItems);
+    $('#cart-total-items-mobile').text(totalItems);
+    $('#empty-cart').hide();
+
+  }
+
+
+  function showAddingToCartValidation(){
+    $('.nav-cart__actions').show();  // show actions 'voir panier' et 'paiement'
+
+    $('.nav-cart__dropdown' ).css( {"visibility": "visible",'opacity':1});
+    $('#add-to-cart-btn').html("<i class='ui-check'></i><span>Ajouté</span>").prop('disabled',true);
+    $('#add-to-cart-btn').css('background-color','green');
+    $('#add-to-cart-btn').removeClass('btn-color');
+    setTimeout(function(){$('.nav-cart__dropdown' ).prop('style',null)},5000);
+  }
+
+  function addSpinLoaderToDiv(divId){
+    let loader = "<div class='ld ld-ring ld-spin'></div>";
+    $(divId).append(loader);
+  }
 
 
 });

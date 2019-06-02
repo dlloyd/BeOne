@@ -37,12 +37,8 @@
         {% for item in app.session.get('cart') %}
          {% set subTotal = (item.quantity * item.priceUnit) %}
          {% set totalAmount = totalAmount + subTotal %}
-         {% if item.size is defined %}
-          {% set sizeSubname = item.size.subname %}
-         {% else %}
-          {% set sizeSubname = 'none' %}
-         {% endif %}
-         <tr class="cart_item" id="{{item.id}}{{sizeSubname}}" data-item-id="{{item.id}}" data-item-size="{{sizeSubname}}" >
+
+         <tr class="cart_item" id="{{item.id}}{{item.size}}" data-item-id="{{item.id}}" data-item-size="{{item.size}}" >
            <td class="product-thumbnail">
              <a>
                <img src="{{item.imageUrl}}" alt="">
@@ -51,10 +47,10 @@
            </td>
            <td class="product-name">
              <a href="#">{{item.name}}</a><br/>
-             {% if item.size is defined %}
+             {% if item.size != 'none' %}
              Taille:
              <ul>
-               <li>{{sizeSubname}}</li>
+               <li>{{item.size}}</li>
              </ul>
 
              {% endif %}
@@ -74,7 +70,7 @@
              <span class="prod-subtotal">{{ subTotal|number_format(2,',',' ') }}</span><span>&euro;</span>
            </td>
            <td class="product-remove">
-             <a href="{{ path('remove_from_cart',{'id':item.id, 'size':sizeSubname}) }}" class="remove" title="supprimer">
+             <a href="{{ path('remove_from_cart',{'id':item.id, 'size':item.size}) }}" class="remove" title="supprimer">
                <i class="ui-close"></i>
              </a>
            </td>

@@ -85,12 +85,7 @@
                     {% set subTotal = (item.quantity * item.priceUnit) %}
                     {% set totalAmount = totalAmount + subTotal %}
 
-                     {% if item.size is defined %}
-                      {% set sizeSubname = item.size.subname %}
-                     {% else %}
-                      {% set sizeSubname = 'none' %}
-                     {% endif %}
-                  <div class="nav-cart__item clearfix" id="{{item.id}}{{sizeSubname}}">
+                   <div class="nav-cart__item clearfix" id="{{item.id}}{{item.size}}">
                     <div class="nav-cart__img">
                       <a href="#">
                         <img src="{{item.imageUrl}}" alt="">
@@ -100,8 +95,8 @@
                       <a href="#">
                         {{item.name}}
                       </a>
-                      {% if item.size is defined %}
-                        <br/> <span>Taille:{{sizeSubname}}</span>
+                      {% if item.size !='none' %}
+                        <br/> <span>Taille:{{item.size}}</span>
                       {% endif %}
                       <div class="nav-cart__price">
                         <span><span class="qty">{{item.quantity }}</span> x</span>
@@ -109,7 +104,7 @@
                       </div>
                     </div>
                     <div class="nav-cart__remove">
-                      <a href="{{ path('remove_from_cart',{'id':item.id, 'size':sizeSubname}) }}"><i class="ui-close"></i></a>
+                      <a href="{{ path('remove_from_cart',{'id':item.id, 'size':item.size}) }}"><i class="ui-close"></i></a>
                     </div>
                   </div>
                   {% endfor %}
