@@ -46,9 +46,10 @@ $(document).ready(function() {
     event.preventDefault();
     //$(this).prop('disabled',true);
     let href = $(this).find('a').first().attr('href');
+    $(this).find('a').remove();
     let parent = $(this).parent();
     let getting = $.get(href);
-    $(this).find('a').first().removeAttr('href');
+
     getting.done(function(data){
       deleteFromCartView('#'+parent.attr('id'));
       if ( $('.nav-cart__items').children().length == 0 ) {  // if cart is empty don't display button 'voir panier' and 'passer au paiement'
