@@ -23,9 +23,6 @@
           <li>
             <a href="{{path('homepage')}}">Accueil</a>
           </li>
-          <li>
-            <a href="#">Produits</a>
-          </li>
           <li class="active">
             Ajouter un produit
           </li>
@@ -42,9 +39,9 @@
         <div class="row">
 
           <div class="col-lg-8">
-            <h2 class="uppercase">Nouveau produit </h2>
+            <h2 class="uppercase">Ajouter {{family.name}} </h2>
 
-            {{ form_start(form, {'method': 'post', 'action': path('add_product') }) }}
+            {{ form_start(form, {'method': 'post', 'action': path('add_product',{'famCode':family.code}) }) }}
 
             <!-- Form -->
             <form id="contact-form" class="contact-form mt-30 mb-30" method="post" action="#">
@@ -56,15 +53,13 @@
                 <label for="price">Prix Unitaire <abbr title="required" class="required">*</abbr></label>
                 {{ form_widget(form.priceUnit) }}
               </div>
-              <div class="contact-subject">
-                <label for="family">Famille de produit</label>
-                {{ form_widget(form.family) }}
-              </div>
 
+              {% if form.sizes is defined %}
               <div class="contact-subject">
                 <label for="size">Tailles</label>
                 {{ form_widget(form.sizes) }}
               </div>
+              {% endif %}
               <div class="contact-message">
                 <label for="message">Description <abbr title="required" class="required">*</abbr></label>
                 {{ form_widget(form.description) }}

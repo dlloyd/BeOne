@@ -17,7 +17,11 @@
        <a href="#" class="sidenav__menu-link" >Panel Administrateur</a>
        <button class="sidenav__menu-toggle" aria-haspopup="true" aria-label="Open dropdown"><i class="ui-arrow-down"></i></button>
        <ul class="sidenav__menu-dropdown">
-         <li><a href="{{ path('add_product') }}" class="sidenav__menu-link" >Ajouter produit</a></li>
+         {% for fam in families %}
+           <li>
+             <a href="{{ path('add_product',{'famCode':fam.code}) }}">Ajouter {{fam.name}}</a>
+           </li>
+         {% endfor %}
          <li><a href="{{ path('products_list') }}" class="sidenav__menu-link" >Liste des produits</a></li>
          <li><a href="{{ path('admin_get_purchases_not_delivered') }}" class="sidenav__menu-link" >Liste des commandes en cours</a></li>
          <li><a href="{{ path('admin_get_purchases_delivered') }}" class="sidenav__menu-link" >Liste des commandes livrées</a></li>
@@ -160,7 +164,11 @@
               <li class="nav__dropdown">
                <a href="#">Panel Administrateur</a>
                <ul class="nav__dropdown-menu">
-                 <li><a href="{{ path('add_product') }}">Ajouter produit</a></li>
+                 {% for fam in families %}
+                   <li>
+                     <a href="{{ path('add_product',{'famCode':fam.code}) }}">Ajouter {{fam.name}}</a>
+                   </li>
+                 {% endfor %}
                  <li><a href="{{ path('products_list') }}">Liste des produits</a></li>
                  <li><a href="{{ path('admin_get_purchases_not_delivered') }}">Liste des commandes en cours</a></li>
                  <li><a href="{{ path('admin_get_purchases_delivered') }}">Liste des commandes livrées</a></li>

@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Product;
 use AppBundle\Form\ProductType;
 use AppBundle\Form\ImageType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -23,17 +24,16 @@ class ProductController extends Controller
   */
   public function productsListAction(){
     $em = $this->getDoctrine()->getManager();
-    $prods = $em->getRepository('AppBundle:Product')->findAll();
+    $prods = $em->getRepository('AppBundle:Product')->findAllActives();
     return $this->render('product/list.html.twig',array('products'=>$prods));
 
   }
 
-  
+
   public function filterBySizeAction(){
     $em = $this->getDoctrine()->getManager();
     $sizes = $em->getRepository('AppBundle:SizeProduct')->findAll();
     return $this->render('product/filter-by-size.html.twig',array('sizes'=>$sizes));
-
   }
 
 
@@ -89,23 +89,33 @@ class ProductController extends Controller
 
 
 /**
- * @Route("/admin/add/prod/", name="add_product")
+ * @Route("/admin/add/prodfam/{famCode}", name="add_product")
  */
-  public function createAction(Request $req){
+  public function createAction(Request $req,$famCode){
     $prod = new Product();
-
+    $em = $this->getDoctrine()->getManager();
+    $fam = $em->getRepository('AppBundle:ProductFamily')->findOneBy(['code'=>$famCode]);
   	$form = $this->createForm(ProductType::class, $prod);
+    if($fam->getHasSize()){
+      $form->add('sizes', EntityType::class, array(
+          'required'=> true,
+          'class' => 'AppBundle:SizeProduct',
+          'choice_label' => 'name',
+          'expanded' => true,
+          'multiple' => true ));
+    }
   	$form->HandleRequest($req);
   	if($form->isSubmitted() && $form->isValid()){
          $em = $this->getDoctrine()->getManager();
          $prod->setIsHidden(false);
+         $prod->setFamily($fam);
          $em->persist($prod);
          $em->flush();
          $req->getSession()->getFlashBag()->add('notice','Produit ajouté');
          return $this->redirectToRoute('add_product_image',array('id'=>$prod->getId()));
       }
 
-      return $this->render('product/create.html.twig',array('form' => $form->createView(),));
+      return $this->render('product/create.html.twig',array('form' => $form->createView(),'family'=>$fam));
   }
 
 
@@ -124,7 +134,6 @@ public function deleteProductAction($id){
   $prod->setIsHidden(true);
     $em->merge($prod);
     $em->flush();
-    $req->getSession()->getFlashBag()->add('notice','Produit supprimé');
 
   return $this->redirectToRoute('products_list');
 }
@@ -140,6 +149,7 @@ public function deleteProductAction($id){
 
   	$form = $this->createFormBuilder($images)
           ->add('images',CollectionType::class, array(
+                  'label' => false,
                   'entry_type' => ImageType::class,
                   'entry_options' => array('label' => false),
                   'allow_add' => true,
@@ -182,6 +192,15 @@ public function deleteProductAction($id){
     $prod = $em->getRepository('AppBundle:Product')->find($id);
 
     $form = $this->createForm(ProductType::class, $prod);
+
+    if($prod->getFamily()->getHasSize()){
+      $form->add('sizes', EntityType::class, array(
+          'required'=> true,
+          'class' => 'AppBundle:SizeProduct',
+          'choice_label' => 'name',
+          'expanded' => true,
+          'multiple' => true ));
+    }
 
     $form->HandleRequest($req);
     if($form->isSubmitted() && $form->isValid()){

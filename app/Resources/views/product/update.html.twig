@@ -27,7 +27,7 @@
             <a href="#">Produits</a>
           </li>
           <li class="active">
-            Modifier {{ product.name }}
+            Modifier produit
           </li>
         </ol>
 
@@ -42,7 +42,7 @@
         <div class="row">
 
           <div class="col-lg-8">
-            <h2 class="uppercase">Modifier  </h2>
+            <h2 class="uppercase">Modifier produit {{ product.name }}  </h2>
 
             {{ form_start(form, {'method': 'post', 'action': path('update_product',{'id':product.id}) }) }}
 
@@ -56,15 +56,12 @@
                 <label for="price">Prix Unitaire <abbr title="required" class="required">*</abbr></label>
                 {{ form_widget(form.priceUnit) }}
               </div>
-              <div class="contact-subject">
-                <label for="family">Famille de produit</label>
-                {{ form_widget(form.family) }}
-              </div>
-
+              {% if form.size is defined %}
               <div class="contact-subject">
                 <label for="size">Tailles</label>
                 {{ form_widget(form.sizes) }}
               </div>
+              {% endif %}
               <div class="contact-message">
                 <label for="message">Description <abbr title="required" class="required">*</abbr></label>
                 {{ form_widget(form.description) }}

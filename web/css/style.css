@@ -13,8 +13,9 @@
 8.Navigation
 9.Footer
 10.Helper CLasses
-11. Loading animation
-12. Cookies consent
+11.Loading animation
+12.Cookies consent
+13.Progress Bar
 
 /*-------------------------------------------------------*/
 /*-------------------------------------------------------*/
@@ -4838,3 +4839,10 @@ input.nav__search-input:-ms-input-placeholder {
     background-color: #E0C91F;
 }
 /*Cookie Consent End*/
+
+
+/*Progress Bar */
+
+.progress { position:relative; width:400px;margin-left: 17%;height: 25px;border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+.bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+.percent { position:absolute; display:inline-block; top:3px; left:48%; }

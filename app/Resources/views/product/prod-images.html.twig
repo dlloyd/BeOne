@@ -7,93 +7,82 @@
 
 <!-- Container -->
 <div class="container" style="margin-bottom:300px;margin-top:100px;">
+	<h1 align="center"> Gestion Images </h1> <br/><br/>
 	<div class="row">
-
-		<!-- Content
-		================================================== -->
-		<div class="col-lg-8 col-md-8 padding-right-30" style="text-align:center;margin-top:5%;">
-			<div>
-				<h2><u>Détail Produit</u></h2>
-					Produit: &nbsp <strong>{{ product.name }}</strong><br/>
-
-					Prix Unitaire: &nbsp <strong>{{ product.priceUnit }} &euro; </strong><br/><br/>
-					<a href="{{ path('update_product',{'id':product.id }) }}" class="btn btn-lg"> Mettre à jour </a>
-
+	 <div class="col-sm-4">
+		<div class="card bg-light mb-3" style="width: 18rem;">
+			<div class="card-header">
+				Détail Produit
 			</div>
-
-
-
-			<!-- Dropzone -->
-			<div style="margin-top:10%">
-
-				<!-- Headline -->
-				<div class="add-listing-headline">
-					<h2><u>Ajouter une image</u></h2>
-				</div>
-
-				<!-- Dropzone -->
-				<div class="submit-section">
-					{{ form_start(form,{'attr': {'id': 'image_form'},'method': 'post', 'action': path('add_product_image',{'id':product.id}) }) }}
-
-					<ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
-
-
-					</ul>
-					{{ form_widget(form.save,{'attr':{'class': 'btn btn-lg btn-color btn-button' }}) }}
-
-					{{ form_rest(form) }}
-
-					{{ form_end(form) }}
-
-				</div>
-
-			</div>
-
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">Produit: &nbsp <strong>{{ product.name }}</strong></li>
+				<li class="list-group-item">	Prix Unitaire: &nbsp <strong>{{ product.priceUnit|number_format(2,',',' ') }} &euro; </strong></li>
+				<li class="list-group-item"><a href="{{ path('update_product',{'id':product.id }) }}"> Mettre à jour </a></li>
+			</ul>
+		 </div>
 		</div>
+		<div class="col-sm-8">
+			<div class="card bg-light mb-3">
+			  <div class="card-header">
+			    Ajouter une image
+			  </div>
+			  <div class="card-body">
+			    <p class="card-text">
+						{{ form_start(form,{'attr': {'id': 'image_form'},'method': 'post', 'action': path('add_product_image',{'id':product.id}) }) }}
 
+						<ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+						</ul>
+						{{ form_widget(form.save,{'attr':{'class': 'btn btn-lg btn-color btn-button' }}) }}
 
-		<!-- Sidebar
-		================================================== -->
-		<div class="col-lg-4 col-md-4 margin-top-0 margin-bottom-60">
-			<h2><u>Liste des images</u></h2>
-			<div id="images_content">
-				{% for img in product.images %}
-				<div class="listing-item" style="border:1px solid black;margin-bottom:20px;">
-				<img src="{{ asset('images_products/'~img.name) }}" alt=""/>
+						{{ form_rest(form) }}
 
-				<div class="listing-item-content">
+						{{ form_end(form) }}
+					</p>
 
-					<form action="{{ path('change_product_image_star',{'imgId':img.id}) }}">
-						{% if img.isStar != true %}
-						<input name='star' type="submit" value="Rendre vedette" style="background-color:red;color:white;"  />
-						{% else %}
-						<input name='star' type="submit" value="Rendre vedette" style="background-color:green;color:white;"  disabled/>
-						{% endif %}
-					</form>
-
-					<form action="{{ path('change_product_image_star_back',{'imgId':img.id}) }}">
-						{% if img.isStarBack != true %}
-						<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:red;color:white;"  />
-						{% else %}
-						<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:green;color:white;" disabled/>
-						{% endif %}
-					</form>
-
-					<form action="{{ path('delete_product_image',{'imgId':img.id}) }}">
-						<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;' />
-					</form>
-
-
-				</div>
-				</div>
-
-				{% endfor %}
+					<div class="progress" style="display:none;">
+							<div class="bar"></div >
+							<div class="percent">0%</div >
+					</div>
+			  </div>
 			</div>
+			</div>
+		</div>
+		<div class="card-columns" id="images_content" style="border-radius:5px;padding:10px;margin-top: 20px;border:1px solid #ddd;">
+			{% for img in product.images %}
+			<div class="card" style="width: 18rem;">
+				<img class="card-img-top" src="{{ asset('images_products/'~img.name) }}" alt="">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<form action="{{ path('change_product_image_star',{'imgId':img.id}) }}">
+							{% if img.isStar != true %}
+							<input name='star' type="submit" value="Rendre vedette" style="background-color:red;color:white;margin-bottom:0%;"  />
+							{% else %}
+							<input name='star' type="submit" value="Rendre vedette" style="background-color:green;color:white;margin-bottom:0%;"  disabled/>
+							{% endif %}
+						</form>
+					</li>
+					<li class="list-group-item">
+						<form action="{{ path('change_product_image_star_back',{'imgId':img.id}) }}">
+							{% if img.isStarBack != true %}
+							<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:red;color:white;margin-bottom:0%;"  />
+							{% else %}
+							<input name="star_back" type="submit" value="Rendre vedette arrière-plan" style="background-color:green;color:white;margin-bottom:0%;" disabled/>
+							{% endif %}
+						</form>
+					</li>
+					<li class="list-group-item">
+						<form action="{{ path('delete_product_image',{'imgId':img.id}) }}">
+							<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;margin-bottom:0%;' />
+						</form>
+					</li>
+				</ul>
+				</div>
 
+			{% endfor %}
 		</div>
 
 	</div>
-</div>
+
 
 {% endblock %}
 
@@ -118,6 +107,7 @@
 
 	    $addImgButton.on('click', function(e) {
 	        $("#form_save").prop('disabled', false).show();
+					$('.progress').show();  //show progress bar
 					$(this).hide();
 	        addImgForm($collectionHolder, $newLinkLi);
 	    });
@@ -140,13 +130,29 @@
 </script>
 
 <script type="text/javascript"> //async form for image add
-
+	let bar = $('.bar');
+	let percent = $('.percent');
+	let status = $('#status');
 	$(document).ready(function() {
     let options = {
         success:   showResponse,  // post-submit callback
 				clearForm: true,        // clear all form fields after successful submit
 				resetForm: true,        // reset the form after successful submit
-				dataType:  'json'        // 'xml', 'script', or 'json' (expected server response type)
+				dataType:  'json',        // 'xml', 'script', or 'json' (expected server response type)
+				beforeSend: function() {
+		        status.empty();
+		        var percentVal = '0%';
+		        bar.width(percentVal);
+		        percent.html(percentVal);
+		    },
+		    uploadProgress: function(event, position, total, percentComplete) {
+		        var percentVal = percentComplete + '%';
+		        bar.width(percentVal);
+		        percent.html(percentVal);
+		    },
+		    error: function(xhr, statusText, err) {
+		        status.html(err || statusText);
+		    }
 
     };
 
@@ -163,24 +169,26 @@ function showResponse(data)  {
 	let delete_image_route = Routing.generate('delete_product_image', { imgId: data[0] });
 	let img_link = "/images_products/"+data[1];
 
+	let content = "<div class='card' style='width: 18rem;'>"+
+								"<img class='card-img-top' src="+ img_link +" >"+
+								"<ul class='list-group list-group-flush'>"+
+									"<li class='list-group-item'>"+
+										"<form action=\""+star_route+"\" >"+
+											"<input name='star' type='submit' value='Rendre vedette' style='background-color:red;color:white;margin-bottom:0%;' />"+
+										"</form></li>"+
+									"<li class='list-group-item'>"+
+										"<form action=\""+star_back_route+"\" >"+
+											"<input name='star_back' type='submit' value='Rendre vedette arrière-plan' style='background-color:red;color:white;margin-bottom:0%;'/>	"+
+										"</form></li>"+
+										"<li class='list-group-item'>"+
+										"<form action= \""+delete_image_route+"\">"+
+											"<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;margin-bottom:0%;' />"+
+										"</form></li></ul></div>";
 
-	let content = "<div class='listing-item' style='border:1px solid black;margin-bottom:20px;'> <img src="+ img_link +" alt=''/>"+
-								"<div class='listing-item-content'>"+
-								"<form action=\""+star_route+"\">"+
-								"<input name='star' type='submit' value='Rendre vedette' style='background-color:red;color:white;' />"+
-								"</form>"+
-								"<form action=\""+star_back_route+"\">"+
-								"<input name='star_back' type='submit' value='Rendre vedette arrière-plan'style='background-color:red;color:white;' />"+
-								"</form>"+
-								"<form action=\""+delete_image_route+"\">"+
-								"<input name='delete' type='submit' value='Supprimer image'style='background-color:red;color:white;' />"+
-								"</form>"+
-
-								"</div>"+
-								"</div>" ;
 
 	$('#images_content').append(content);
 	$("#form_save").hide();
+	$('.progress').hide();
 	$('#form_images_1').closest('li').remove();
 	$(".add_img_link").show();
 }
@@ -248,7 +256,7 @@ function showResponse(data)  {
 		  // new display on success
 		  posting.done(function( data ) {
 				alert(data);
-				selected.closest('.listing-item').remove();
+				selected.closest('.card').remove();
 	  	});
 		})
 });

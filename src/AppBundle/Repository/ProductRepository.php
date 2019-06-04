@@ -21,6 +21,14 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findAllActives(){
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.isHidden = false')
+            ->orderBy('p.id', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findMixedProducts($number){
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.isHidden = false')
@@ -34,7 +42,7 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
             ->where('p.isHidden = false')
             ->orderBy('p.dateAdded', 'DESC')
             ->setMaxResults($number);
-            
+
         return $qb->getQuery()->getResult();
     }
 
