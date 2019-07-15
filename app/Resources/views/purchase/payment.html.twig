@@ -114,7 +114,7 @@
                     {% set size = '' %}
                    {% endif %}
                     <tr>
-                      <th>{{item.name}} {{size}} <span class="count"> x {{item.quantity}}</span></th>
+                      <th>{{item.name}} {{size}} <span class="count" style="color:black;"> &nbsp;&nbsp;x {{item.quantity}}</span></th>
                       <td>
                         <span class="amount">{{ subTotal | number_format(2,',',' ') }}&euro;</span>
                       </td>

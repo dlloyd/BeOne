@@ -26,10 +26,10 @@
             <th class="customer-lastname">Nom</th>
             <th class="customer-firstname">Prénom</th>
             <th class="customer-country">Pays</th>
-            <th class="customer-postalcode">Code Postal</th>
             <th class="customer-address">Addresse</th>
+            <th class="customer-postalcode">Code Postal</th>
             <th class="purchase-details">Détails commande</th>
-            <th class="validate-delivery"> Livrer </th>
+            <th class="code-delivery"> Livraison </th>
 
           </tr>
         </thead>
@@ -88,7 +88,7 @@
                             <a>{{item.name}}</a>
                           </td>
                           <td class="product-size">
-                            {% if item.size is defined %}{{item.size.subname}} {% endif %}
+                            {% if item.size is defined %}{{item.size}} {% endif %}
                           </td>
                           <td class="product-quantity">
                             {{ item.quantity }}
@@ -109,21 +109,24 @@
               </div>
            </td>
 
+          <td class="code-delivery">
           {% if purchase.isDelivered == false %}
-          <td class="validate-delivery">
-            <form action="{{ path('admin_validate_purchase_delivery') }}" method="post">
-               <input type="text" name="delivery-code" value='' class="delivery-code" placeholder="Code livraison" required/>
-               <input type="hidden" value="{{purchase.code}}" name="code" />
-               <button type="button"  class="delivery">
-                 Valider
-               </button>
-             </form>
+
+              <form action="{{ path('admin_validate_purchase_delivery') }}" method="post">
+                 <input type="text" name="delivery-code" value='' class="delivery-code" placeholder="Code livraison" required/>
+                 <input type="hidden" value="{{purchase.code}}" name="code" />
+                 <button type="button"  class="delivery">
+                   Valider
+                 </button>
+               </form>
+
+           {% else %}
+
+             <span> Livrée le : {{purchase.deliveryDate | date('d/m/Y')}}/ &nbsp;&nbsp; code:{{ purchase.deliveryCode }}</span>
+             
+           {% endif %}
+
           </td>
-         {% else %}
-           <td class="validate-delivery">
-           <span> Livrée le : {{purchase.deliveryDate | date('d/m/Y')}} </span>
-           </td>
-         {% endif %}
 
          </tr>
        {% endfor %}

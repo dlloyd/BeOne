@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -17,6 +18,19 @@ class DefaultController extends Controller
         $newProducts = $em->getRepository('AppBundle:Product')->findLatestProducts(4);
         $mixedProducts = $em->getRepository('AppBundle:Product')->findMixedProducts(4);
         return $this->render('default/index.html.twig',array('newProducts'=>$newProducts,'mixedProducts'=>$mixedProducts,));
+    }
+
+    /**
+     * @Route("/validatecook", name="cookies_consented")
+     */
+    public function cookiesConsentAction(Request $request)
+    {
+      if (!$request->isXmlHttpRequest()) {
+          return new Response('Uniquement requête Ajax', 400);
+      }
+      $session = $request->getSession();
+      $session->set('cookieConsented',true);
+      return new Response('cookies consented', 200);
     }
 
 

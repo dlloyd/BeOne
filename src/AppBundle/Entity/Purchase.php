@@ -105,7 +105,7 @@ class Purchase
 
     /**
      * @var string
-     * @ORM\Column(name="customer_postalCode", type="string",length=255, unique=true)
+     * @ORM\Column(name="customer_postalCode", type="string",length=255)
      */
     private $customerPostalCode;
 

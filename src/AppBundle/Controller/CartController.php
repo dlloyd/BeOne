@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CartController extends Controller
 {
   /**
-   * @Method("GET")
+   * @Route( "/f4gdfg65df4g5df545df4", condition="context.getMethod() in ['GET','HEAD'] ")
    */
   public function addProductFormAction(Request $req,$prodId){
     $em = $this->getDoctrine()->getManager();
@@ -37,8 +36,7 @@ class CartController extends Controller
 
 
   /**
-   * @Route("/addtocart/{prodId}",requirements={"prodId" = "\d+"}, name="add_to_cart")
-   * @Method("POST")
+   * @Route("/addtocart/{prodId}",requirements={"prodId" = "\d+"},condition="context.getMethod() in ['POST','HEAD'] ", name="add_to_cart")
    */
   public function addProductAction(Request $req,$prodId){
       if (!$req->isXmlHttpRequest()) {
